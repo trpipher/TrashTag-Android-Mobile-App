@@ -8,15 +8,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import android.location.Location;
-import android.view.View;
-
 import androidx.core.content.ContextCompat;
 
-
-
+//--------For Google Map API---------------
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,24 +23,26 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-
 //--------For Google Map API---------------
 
 public class MainActivity extends AppCompatActivity
         implements OnMapReadyCallback,OnMapClickListener{
-
+    //Debug use only
     private String TAG="TrashTag";
+    //Handle of the google map
     private GoogleMap mMap;
-    private CameraPosition mCameraPosition;
-    // A default location (Sydney, Australia) and default zoom to use when location permission is
-    // not granted.
+
+    // A default location (Sydney, Australia) and default zoom to use
+    // when location permission isn't granted.
     private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
     private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    //Flag of whether permission is granted by user
     private boolean mLocationPermissionGranted;
-    // The geographical location where the device is currently located. That is, the last-known
-    // location retrieved by the Fused Location Provider.
+    // The geographical location where the device is currently located.
+    // That is the last-knownlocation retrieved by the Fused Location Provider.
     private Location mLastKnownLocation;
+    private CameraPosition mCameraPosition;
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
@@ -53,6 +51,7 @@ public class MainActivity extends AppCompatActivity
     private static final String KEY_LOCATION = "location";
     //Total Tag number on  the map
     private int TotalNum=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,8 +70,10 @@ public class MainActivity extends AppCompatActivity
         mapFragment.getMapAsync(this);
     }
     /**
-     * Saves the state of the map when the activity is paused.
-     */
+     *  usage:
+     *      When our app lost focus,this app will be callback to save the map/tag info.
+     *
+     **/
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         if (mMap != null) {
@@ -81,6 +82,11 @@ public class MainActivity extends AppCompatActivity
             super.onSaveInstanceState(outState);
         }
     }
+    /**
+     *  usage:
+     *      Get user's current location. Call at onMapReady function
+     *
+     **/
     private void getDeviceLocation() {
         /*
          * Get the best and most recent location of the device, which may be null in rare
@@ -98,6 +104,7 @@ public class MainActivity extends AppCompatActivity
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(mLastKnownLocation.getLatitude(),
                                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                            //Drap a tag in current location
                             dropPinOnMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
@@ -105,6 +112,7 @@ public class MainActivity extends AppCompatActivity
                             mMap.moveCamera(CameraUpdateFactory
                                     .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                            //Drap a tag in default location
                             dropPinOnMap(mDefaultLocation.latitude,mDefaultLocation.longitude);
                         }
                     }
@@ -114,19 +122,35 @@ public class MainActivity extends AppCompatActivity
             Log.e("Exception: %s", e.getMessage());
         }
     }
-    //Drop a Tag on the Given location
+    /**
+     *  usage:
+     *      Customer function. Use this function to draw a tag at a given location
+     *  variable:
+     *      Latitude: double type. Latitude of the location.
+     *      Longitude: double type. Longitude of the location.
+     *
+     **/
     private void dropPinOnMap(double Latitude,double Longitude) {
+        //Trash tag number ++
         TotalNum++;
+        //Draw a tag on the map
         mMap.addMarker(new MarkerOptions().
                 position(new LatLng(Latitude,Longitude))
                 .title("Trash NO."+String.valueOf(TotalNum)));
     }
+
+     // --------------Google API.--------------------
     /**
-     * --------------Google Map API.--------------------
-     */
+     *  usage:
+     *      When the google map is ready to be used, This function will be callback.
+     *  variable:
+     *      googleMap: It's GoogleMap type. It a handle to the google map
+     *
+     **/
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;;
+        //Set the main activity as the click listener
         mMap.setOnMapClickListener(this);
         // Prompt the user for permission.
         getLocationPermission();
@@ -134,18 +158,29 @@ public class MainActivity extends AppCompatActivity
         getDeviceLocation();
 
     }
+    /**
+     *  usage:
+     *      When user click the map. This function will be callback by google map.
+     *  variable:
+     *      point: It's LatLng type. Contain the location info of where user clicked.
+     *
+     **/
     @Override
     public void onMapClick(LatLng point) {
+        //Just drop a tag where the user clicked
         dropPinOnMap(point.latitude,point.longitude);
-
     }
-
+    /**
+     *  usage:
+     *      Ask user for permission state in AndroidManifest.xml.
+     *  variable:
+     *      NULL
+     *
+     **/
     private void getLocationPermission(){
-        /*
-         * Request location permission, so that we can get the location of the
-         * device. The result of the permission request is handled by a callback,
-         * onRequestPermissionsResult.
-         */
+        //Request location permission, so that we can get the location of the
+        //device. The result of the permission request is handled by a callback,
+        //onRequestPermissionsResult.
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -156,6 +191,11 @@ public class MainActivity extends AppCompatActivity
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
+    /**
+     *  usage:
+     *      If user respond to the permission request, this function will be callback
+     *
+     **/
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
@@ -170,10 +210,10 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
-        //updateLocationUI();
+
     }
     /**
-     * --------------Google Map API.--------------------
+     * --------------Google API.--------------------
      */
 
 }
