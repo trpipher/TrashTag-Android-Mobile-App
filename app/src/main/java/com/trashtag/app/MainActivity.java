@@ -1,10 +1,14 @@
 package com.trashtag.app;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,10 +17,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+
+
 //--------For Google Map API---------------
 
 public class MainActivity extends AppCompatActivity
-        implements OnMapReadyCallback{
+        implements
+        OnMapReadyCallback {
 
     TextView textBox;
     Button btn;
@@ -40,13 +47,38 @@ public class MainActivity extends AppCompatActivity
      * Play services inside the SupportMapFragment. The API invokes this method after the user has
      * installed Google Play services and returned to the app.
      */
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        // Add a marker in Sydney, Australia,
-        // and move the map's camera to the same location.
-        LatLng sydney = new LatLng(-33.852, 151.211);
-        googleMap.addMarker(new MarkerOptions().position(sydney)
-                .title("Marker in Sydney"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        /*
+         - Call the function to load Hattiesburg
+
+         TODO:
+         1. Ask for User's current location
+         2. Navigate to exact Lat, Lon
+         3. Zoom in closer to User to seem more localized
+
+         */
+        GoogleMap gMap = googleMap;
+        OnMapLoaded(gMap);
+
     }
+
+
+    public void OnMapLoaded(GoogleMap gMap) {
+
+        /*
+         - Setting the latitude and longitude of Hattiesburg
+         - Adds a marker to Hattiesburg (optional)
+         - Move the camera to the Lat, Lon and zooms in closer (zoom: 13) Lower zoom = farther away, Higher zoom: closer
+         */
+
+        LatLng hattiesburg = new LatLng(31.3271, -89.2903);
+        //gMap.addMarker(new MarkerOptions().position(hattiesburg).title("Marker in Hattiesburg"));
+        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hattiesburg, 13));
+    }
+
+
 }
