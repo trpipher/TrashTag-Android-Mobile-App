@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity
 
     // A default location (Sydney, Australia) and default zoom to use
     // when location permission isn't granted.
-    private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
+    private final LatLng mDefaultLocation = new LatLng(31.329749, -81.334187);
     private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     //Flag of whether permission is granted by user
