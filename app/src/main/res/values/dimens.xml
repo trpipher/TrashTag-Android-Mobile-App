@@ -1,3 +1,6 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab1_translate">90dp</dimen>
+    <dimen name="fab2_translate">170dp</dimen>
+    <dimen name="fab3_translate">220dp</dimen>
 </resources>

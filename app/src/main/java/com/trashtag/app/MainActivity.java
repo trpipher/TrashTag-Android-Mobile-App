@@ -1,5 +1,6 @@
 package com.trashtag.app;
 
+import android.animation.Animator;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import android.location.Location;
+import android.view.View;
+import android.widget.LinearLayout;
+
 import androidx.core.content.ContextCompat;
 
 //--------For Google Map API---------------
@@ -23,6 +27,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 //--------For Google Map API---------------
 
 public class MainActivity extends AppCompatActivity
@@ -52,15 +60,54 @@ public class MainActivity extends AppCompatActivity
     //Total Tag number on  the map
     private int TotalNum=0;
 
+    //private FirebaseAuth mAuth;
+
+    private FloatingActionButton fab;
+    private FloatingActionButton fab1;
+    private FloatingActionButton fab2;
+    private LinearLayout fabMLayout;
+    private LinearLayout fab1Layout;
+    private LinearLayout fab2Layout;
+    private boolean fabMenu = false;
+
+    @Override
+    public void onStart(){
+        super.onStart();
+       // FirebaseUser currentUser = mAuth.getCurrentUser();
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Retrieve location and camera position from saved instance state.
+
         if (savedInstanceState != null) {
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }
         setContentView(R.layout.activity_main);
+        fab = findViewById(R.id.fabMain);
+        fab1 = findViewById(R.id.fab1);
+        fab2 = findViewById(R.id.fab2);
+        fabMLayout = findViewById(R.id.fabMainLayout);
+        fab1Layout = findViewById(R.id.fab1Layout);
+        fab2Layout = findViewById(R.id.fab2Layout);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!fabMenu)
+                {
+                    fabMenu = true;
+                    showFabMenu();
+                }
+                else{
+                    fabMenu = false;
+                    closeFabMenu();
+                }
+
+            }
+        });
 
         // Construct a FusedLocationProviderClient.
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -69,6 +116,45 @@ public class MainActivity extends AppCompatActivity
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
+
+    private void showFabMenu(){
+        Log.i("RAN","showFabMenu");
+        fab1Layout.setVisibility(View.VISIBLE);
+        fab2Layout.setVisibility(View.VISIBLE);
+        fab1Layout.animate().translationY(-getResources().getDimension(R.dimen.fab1_translate));
+        fab2Layout.animate().translationY(-getResources().getDimension(R.dimen.fab2_translate));
+    }
+    private void closeFabMenu(){
+        Log.i("RAN","closeFabMenu");
+        fab1Layout.animate().translationY(0);
+        fab2Layout.animate().translationY(0).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if(!fabMenu)
+                {
+                    fab1Layout.setVisibility(View.GONE);
+                    fab2Layout.setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+    }
+
     /**
      *  usage:
      *      When our app lost focus,this app will be callback to save the map/tag info.

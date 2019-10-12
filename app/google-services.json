@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "407332881636",
+    "firebase_url": "https://trashtag-ff537.firebaseio.com",
+    "project_id": "trashtag-ff537",
+    "storage_bucket": "trashtag-ff537.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:407332881636:android:2fe070406650f780ec18f1",
+        "android_client_info": {
+          "package_name": "com.trashtag.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "407332881636-mtnaoedns2kf9maqh35rdqvkssl4uv84.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.trashtag.app",
+            "certificate_hash": "017040c866a1d25b3902a74e1ee398909c013629"
+          }
+        },
+        {
+          "client_id": "407332881636-hclokgj4j5fg5a3t689br2ggrrs0s2u2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPPyuTqrARY2RmsLXBJP1cBd8yzmgl8kw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "407332881636-hclokgj4j5fg5a3t689br2ggrrs0s2u2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
