@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity
      **/
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;;
+        mMap = googleMap;
         //Set the main activity as the click listener
         mMap.setOnMapClickListener(this);
         // Prompt the user for permission.
