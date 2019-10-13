@@ -5,4 +5,5 @@
     <string name="fab1Name">Trash</string>
     <string name="fab2Name">Recyclables</string>
     <string name="title_activity_profile">Profile</string>
+    <string name="mapBtnText">Map</string>
 </resources>
