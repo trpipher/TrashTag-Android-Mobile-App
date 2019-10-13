@@ -11,16 +11,33 @@ public class MainMenu extends AppCompatActivity {
 
 
     Button btnMap;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_menu);
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main_menu);
 
-        btnMap = findViewById(R.id.btnMap);
+            btnMap = findViewById(R.id.btnMap);
+            btnMap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+        btnMap = findViewById(R.id.profile_id);
         btnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+                Intent intent = new Intent(getApplicationContext(), profile.class);
+                startActivity(intent);
+            }
+        });
+        btnMap = findViewById(R.id.settings_id);
+        btnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), settings.class);
                 startActivity(intent);
             }
         });
