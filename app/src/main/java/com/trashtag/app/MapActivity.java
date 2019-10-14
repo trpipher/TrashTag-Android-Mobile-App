@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat;
 import android.location.Location;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
@@ -69,28 +70,39 @@ public class MapActivity extends AppCompatActivity
     private LinearLayout fabMLayout;
     private LinearLayout fab1Layout;
     private LinearLayout fab2Layout;
+    private TextView fab1Word;
+    private TextView fab2Word;
     private boolean fabMenu = false;
 
     @Override
     public void onStart(){
         super.onStart();
-       // FirebaseUser currentUser = mAuth.getCurrentUser();
+       // getLocationPermission();
 
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         // Retrieve location and camera position from saved instance state.
-
         if (savedInstanceState != null) {
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }
-        setContentView(R.layout.activity_main);
+
+        try {
+
+            mLocationPermissionGranted = getIntent().getBooleanExtra("permissionGranted", false);
+        } catch (Exception e){
+            Log.e("Intent Extras ERROR", e.getLocalizedMessage());
+        }
+
         fab = findViewById(R.id.fabMain);
         fab1 = findViewById(R.id.fab1);
         fab2 = findViewById(R.id.fab2);
+        fab1Word = findViewById(R.id.fab1Text);
+        fab2Word = findViewById(R.id.fab2Text);
         fabMLayout = findViewById(R.id.fabMainLayout);
         fab1Layout = findViewById(R.id.fab1Layout);
         fab2Layout = findViewById(R.id.fab2Layout);
@@ -127,6 +139,8 @@ public class MapActivity extends AppCompatActivity
     }
     private void closeFabMenu(){
         Log.i("RAN","closeFabMenu");
+        fab1Word.setVisibility(View.INVISIBLE);
+        fab2Word.setVisibility(View.INVISIBLE);
         fab1Layout.animate().translationY(0);
         fab2Layout.animate().translationY(0).setListener(new Animator.AnimatorListener() {
             @Override
@@ -140,6 +154,8 @@ public class MapActivity extends AppCompatActivity
                 {
                     fab1Layout.setVisibility(View.GONE);
                     fab2Layout.setVisibility(View.GONE);
+                    fab1Word.setVisibility(View.VISIBLE);
+                    fab2Word.setVisibility(View.VISIBLE);
                 }
 
             }
@@ -238,13 +254,16 @@ public class MapActivity extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        //Set the main activity as the click listener
+    // Prompt the user for permission.
+        //getLocationPermission();
+
         mMap.setMyLocationEnabled(true);
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMyLocationClickListener(this);
+        //Set the main activity as the click listener
         mMap.setOnMapClickListener(this);
-        // Prompt the user for permission.
-        getLocationPermission();
+
+
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
 

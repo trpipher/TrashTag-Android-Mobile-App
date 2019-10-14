@@ -2,8 +2,11 @@ package com.trashtag.app;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,7 +30,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class MainMenu extends AppCompatActivity {
 
-
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private boolean mLocationPermissionGranted = false;
     FirebaseAuth mAuth;
     GoogleSignInClient mGoogleSignInClient;
     Button btnMap;
@@ -39,11 +43,15 @@ public class MainMenu extends AppCompatActivity {
         firebaseInitiation();
         Login();
 
+
+        getLocationPermission();
+
         btnMap = findViewById(R.id.btnMap);
         btnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+                intent.putExtra("permissionGranted",mLocationPermissionGranted);
                 startActivity(intent);
             }
         });
@@ -101,6 +109,21 @@ public class MainMenu extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void getLocationPermission(){
+        //Request location permission, so that we can get the location of the
+        //device. The result of the permission request is handled by a callback,
+        //onRequestPermissionsResult.
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
     }
 
 }
