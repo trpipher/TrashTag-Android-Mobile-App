@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat;
 import android.location.Location;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
@@ -34,7 +35,7 @@ import com.google.firebase.auth.FirebaseUser;
 //--------For Google Map API---------------
 
 public class MapActivity extends AppCompatActivity
-        implements OnMapReadyCallback,OnMapClickListener{
+        implements OnMapReadyCallback,OnMapClickListener, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
     //Debug use only
     private String TAG="TrashTag";
     //Handle of the google map
@@ -173,6 +174,7 @@ public class MapActivity extends AppCompatActivity
      *      Get user's current location. Call at onMapReady function
      *
      **/
+
     private void getDeviceLocation() {
         /*
          * Get the best and most recent location of the device, which may be null in rare
@@ -191,7 +193,7 @@ public class MapActivity extends AppCompatActivity
                                     new LatLng(mLastKnownLocation.getLatitude(),
                                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
                             //Drap a tag in current location
-                            dropPinOnMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
+                            //dropPinOnMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
@@ -199,7 +201,7 @@ public class MapActivity extends AppCompatActivity
                                     .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
                             //Drap a tag in default location
-                            dropPinOnMap(mDefaultLocation.latitude,mDefaultLocation.longitude);
+                            //dropPinOnMap(mDefaultLocation.latitude,mDefaultLocation.longitude);
                         }
                     }
                 });
@@ -237,6 +239,9 @@ public class MapActivity extends AppCompatActivity
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         //Set the main activity as the click listener
+        mMap.setMyLocationEnabled(true);
+        mMap.setOnMyLocationButtonClickListener(this);
+        mMap.setOnMyLocationClickListener(this);
         mMap.setOnMapClickListener(this);
         // Prompt the user for permission.
         getLocationPermission();
@@ -255,6 +260,19 @@ public class MapActivity extends AppCompatActivity
     public void onMapClick(LatLng point) {
         //Just drop a tag where the user clicked
         dropPinOnMap(point.latitude,point.longitude);
+    }
+
+    @Override
+    public void onMyLocationClick(@NonNull Location location) {
+        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+        // Return false so that we don't consume the event and the default behavior still occurs
+        // (the camera animates to the user's current position).
+        return false;
     }
     /**
      *  usage:
@@ -297,6 +315,26 @@ public class MapActivity extends AppCompatActivity
             }
         }
 
+    }
+
+    private void updateLocationUI()
+    {
+        if(mMap ==null)
+            return;
+        try{
+            if(mLocationPermissionGranted){
+                mMap.setMyLocationEnabled(true);
+                mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            }else{
+                mMap.setMyLocationEnabled(false);
+                mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                mLastKnownLocation = null;
+                getLocationPermission();
+            }
+        }catch (SecurityException e)
+        {
+            Log.e("Exception: %s", e.getMessage());
+        }
     }
     /**
      * --------------Google API.--------------------
