@@ -30,5 +30,3 @@ Official Repo for the CSC 414 group project.
 -> push the files to the repository: `git push origin master`
 
 4. Or, upload the files directly to the repo (be careful tho)
-
-Shankar: "I am working on the navigation drawer"
