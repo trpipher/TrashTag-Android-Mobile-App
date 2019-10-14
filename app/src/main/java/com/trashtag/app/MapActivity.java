@@ -2,7 +2,11 @@ package com.trashtag.app;
 
 import android.animation.Animator;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -17,6 +21,8 @@ import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 
 //--------For Google Map API---------------
+import com.google.android.gms.dynamic.IObjectWrapper;
+import com.google.android.gms.internal.maps.zzt;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,12 +32,25 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 //--------For Google Map API---------------
 
@@ -41,6 +60,8 @@ public class MapActivity extends AppCompatActivity
     private String TAG="TrashTag";
     //Handle of the google map
     private GoogleMap mMap;
+    private Geocoder geocoder;
+    List<Address> addresses;
 
     // A default location (Sydney, Australia) and default zoom to use
     // when location permission isn't granted.
@@ -61,6 +82,8 @@ public class MapActivity extends AppCompatActivity
     private static final String KEY_LOCATION = "location";
     //Total Tag number on  the map
     private int TotalNum=0;
+    private DatabaseReference databaseReference;
+
 
     //private FirebaseAuth mAuth;
 
@@ -97,6 +120,18 @@ public class MapActivity extends AppCompatActivity
         } catch (Exception e){
             Log.e("Intent Extras ERROR", e.getLocalizedMessage());
         }
+        geocoder = new Geocoder(this);
+
+
+        // Construct a FusedLocationProviderClient.
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        // Build the map.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        //loadPins();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
         fab = findViewById(R.id.fabMain);
         fab1 = findViewById(R.id.fab1);
@@ -121,13 +156,13 @@ public class MapActivity extends AppCompatActivity
 
             }
         });
+        fab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //loadPins();
+            }
+        });
 
-        // Construct a FusedLocationProviderClient.
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        // Build the map.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
     }
 
     private void showFabMenu(){
@@ -205,6 +240,7 @@ public class MapActivity extends AppCompatActivity
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = task.getResult();
+                            loadPins();
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(mLastKnownLocation.getLatitude(),
                                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
@@ -238,9 +274,18 @@ public class MapActivity extends AppCompatActivity
         //Trash tag number ++
         TotalNum++;
         //Draw a tag on the map
+        Date d = new Date(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat(("MM-dd HH:mm:ss"));
+
+        LatLng latLng = new LatLng(Latitude, Longitude);
+        String Title = "Trash NO."+String.valueOf(TotalNum);
+        customMarker c = new customMarker(Title, latLng);
+        databaseReference.child("Pins").child(getLocation(latLng)).push().setValue(c);
         mMap.addMarker(new MarkerOptions().
                 position(new LatLng(Latitude,Longitude))
-                .title("Trash NO."+String.valueOf(TotalNum)));
+                .title(Title));
+
+
     }
 
      // --------------Google API.--------------------
@@ -266,6 +311,7 @@ public class MapActivity extends AppCompatActivity
 
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
+
 
     }
     /**
@@ -358,6 +404,91 @@ public class MapActivity extends AppCompatActivity
     /**
      * --------------Google API.--------------------
      */
+
+    private void loadPins(){
+        LatLng l = new LatLng(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
+        String state = getLocation(l);
+        DatabaseReference loadRef = FirebaseDatabase.getInstance().getReference("Pins/"+state);
+        Log.i("Got","here");
+        loadRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot: dataSnapshot.getChildren())
+                {
+                    customMarker c = snapshot.getValue(customMarker.class);
+                    c.rationalize();
+                    mMap.addMarker(new MarkerOptions().
+                            position(c.retLoc())
+                            .title(c.Title));
+                    Log.i("marker",c.toString());
+                }
+                Log.i("Got","here3");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private String getLocation(LatLng L)
+    {
+        try{
+            addresses =  geocoder.getFromLocation(L.latitude,L.longitude,10);
+        }catch (Exception e)
+        {
+            Log.e("Error:",e.getLocalizedMessage());
+        }
+        for (int i = 0; i < addresses.size();i++)
+        {
+            if(addresses.get(i).getAdminArea() != null)
+                return addresses.get(i).getAdminArea().replaceAll("[^a-zA-Z]","");
+
+            Log.e("Address:",(addresses.get(i).getAdminArea() != null) ? addresses.get(i).getAdminArea(): "NONE");
+        }
+        return "OOPS";
+    }
+
+}
+
+class customMarker implements Serializable {
+    private LatLng loc;
+    public String Title;
+    public double latude;
+    public double lotude;
+
+    customMarker(String s, LatLng l){
+        loc = l;
+        latude = loc.latitude;
+        lotude = loc.longitude;
+        Title = s;
+
+    }
+
+    void rationalize(){
+        loc = new LatLng(latude,lotude);
+    }
+    customMarker(){
+    }
+
+    LatLng retLoc(){
+        return loc;
+    }
+    @NonNull
+    @Override
+    public String toString() {
+        return "Title: "+Title + " Latude: " + latude+" Lotude: "+lotude +" "+loc.toString();
+    }
+
+    /*
+    public Map<String, Object> toMap(){
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("LatLng",loc);
+        result.put("Title",Title);
+        return result;
+    }
+    */
 
 }
 
