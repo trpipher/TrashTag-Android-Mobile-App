@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class settings extends AppCompatActivity {
+public class Settings extends AppCompatActivity {
 
     Button btnMap;
     @Override

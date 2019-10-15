@@ -6,13 +6,11 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
+
 import android.location.Location;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -22,8 +20,6 @@ import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 
 //--------For Google Map API---------------
-import com.google.android.gms.dynamic.IObjectWrapper;
-import com.google.android.gms.internal.maps.zzt;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,6 +27,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -38,8 +35,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,9 +45,7 @@ import com.google.firebase.database.annotations.NotNull;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 //--------For Google Map API---------------
 
@@ -72,10 +65,13 @@ public class MapActivity extends AppCompatActivity
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     //Flag of whether permission is granted by user
     private boolean mLocationPermissionGranted;
+
+
     // The geographical location where the device is currently located.
     // That is the last-knownlocation retrieved by the Fused Location Provider.
     private Location mLastKnownLocation;
     private CameraPosition mCameraPosition;
+
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
@@ -87,31 +83,29 @@ public class MapActivity extends AppCompatActivity
     private DatabaseReference databaseReference;
 
 
-    //private FirebaseAuth mAuth;
-
     private FloatingActionButton fab;
     private FloatingActionButton fab1;
     private FloatingActionButton fab2;
+    private FloatingActionButton fabConfirm;
+    private FloatingActionButton fabCancel;
     private LinearLayout fabMLayout;
     private LinearLayout fab1Layout;
     private LinearLayout fab2Layout;
     private TextView fab1Word;
     private TextView fab2Word;
+
+
     private boolean fabMenu = false;
+    private boolean creatingPin = false;
+    private int iconID;
+    private Marker lastPin;
+    private String typeOfPin;
 
-
-
-    @Override
-    public void onStart(){
-        super.onStart();
-       // getLocationPermission();
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_map);
         // Retrieve location and camera position from saved instance state.
         if (savedInstanceState != null) {
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
@@ -129,18 +123,22 @@ public class MapActivity extends AppCompatActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        //loadPins();
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         fab = findViewById(R.id.fabMain);
         fab1 = findViewById(R.id.fab1);
         fab2 = findViewById(R.id.fab2);
+        fabCancel = findViewById(R.id.fabPinCancel);
+        fabConfirm = findViewById(R.id.fabPinConfirm);
         fab1Word = findViewById(R.id.fab1Text);
         fab2Word = findViewById(R.id.fab2Text);
         fabMLayout = findViewById(R.id.fabMainLayout);
         fab1Layout = findViewById(R.id.fab1Layout);
         fab2Layout = findViewById(R.id.fab2Layout);
+
+        closeFabConfirms();
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,10 +157,77 @@ public class MapActivity extends AppCompatActivity
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                creatingPin = true;
+                typeOfPin = "Trash";
+                iconID = R.drawable.ic_trashicon;
+                dropPinOnMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
+                showFabConfirms();
             }
         });
 
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                creatingPin = true;
+                typeOfPin = "Recycling";
+                iconID = R.drawable.ic_recycle;
+                dropPinOnMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
+                showFabConfirms();
+            }
+        });
+
+        fabCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                creatingPin = false;
+                if(lastPin != null) {
+                    lastPin.remove();
+                    lastPin = null;
+
+                }
+                closeFabConfirms();
+            }
+        });
+
+        fabConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(lastPin!= null) {
+                    creatingPin = false;
+                    String type = "";
+                    switch (iconID){
+                        case R.drawable.ic_recycle:
+                            type = "Recycle";
+                            break;
+                        case R.drawable.ic_trashicon:
+                            type = "Trash";
+                            break;
+
+                    }
+                    customMarker c = new customMarker(lastPin.getTitle(),lastPin.getSnippet(), type,lastPin.getPosition());
+                    databaseReference.child("Pins").child(getLocation(lastPin.getPosition())).push().setValue(c);
+                    lastPin = null;
+                    closeFabConfirms();
+                }
+                else{
+                    Toast.makeText(getBaseContext(),"Didn't Place a pin", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+
+
+    }
+
+    private void showFabConfirms(){
+        fabConfirm.show();
+        fabCancel.show();
+    }
+
+    private void closeFabConfirms(){
+        fabConfirm.hide();
+        fabCancel.hide();
     }
 
     private void showFabMenu(){
@@ -245,8 +310,7 @@ public class MapActivity extends AppCompatActivity
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(mLastKnownLocation.getLatitude(),
                                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-                            //Drap a tag in current location
-                            //dropPinOnMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
+
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
@@ -254,8 +318,6 @@ public class MapActivity extends AppCompatActivity
                                     .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
 
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                            //Drap a tag in default location
-                            //dropPinOnMap(mDefaultLocation.latitude,mDefaultLocation.longitude);
                         }
                     }
                 });
@@ -274,19 +336,16 @@ public class MapActivity extends AppCompatActivity
      *
      **/
     private void dropPinOnMap(double Latitude,double Longitude) {
-        //Trash tag number ++
-        TotalNum++;
         //Draw a tag on the map
         Date d = new Date(System.currentTimeMillis());
-        SimpleDateFormat sdf = new SimpleDateFormat(("MM-dd HH:mm:ss"));
-
+        SimpleDateFormat sdf = new SimpleDateFormat(("MM-dd-YY HH:mm"));
         LatLng latLng = new LatLng(Latitude, Longitude);
-        String Title = "Trash NO."+String.valueOf(TotalNum);
-        customMarker c = new customMarker(Title, latLng);
-        databaseReference.child("Pins").child(getLocation(latLng)).push().setValue(c);
-        mMap.addMarker(new MarkerOptions().
-                position(new LatLng(Latitude,Longitude))
-                .title(Title));
+        String Title = typeOfPin;
+        lastPin = mMap.addMarker(new MarkerOptions()
+                .position(latLng)
+                .icon(BitmapDescriptorFactory.fromBitmap(AppResources.getBitmapfromVector(this,iconID)))
+                .title(Title)
+                .snippet("Created on: "+sdf.format(d)));
 
 
     }
@@ -327,17 +386,23 @@ public class MapActivity extends AppCompatActivity
     @Override
     public void onMapClick(LatLng point) {
         //Just drop a tag where the user clicked
-        dropPinOnMap(point.latitude,point.longitude);
+       /* if(creatingPin) {
+            if(lastPin != null)
+                lastPin.remove();
+            dropPinOnMap(point.latitude, point.longitude);
+        }
+
+        */
     }
 
     @Override
     public void onMyLocationClick(@NonNull Location location) {
-        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
+
     }
 
     @Override
     public boolean onMyLocationButtonClick() {
-        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+
         // Return false so that we don't consume the event and the default behavior still occurs
         // (the camera animates to the user's current position).
         return false;
@@ -348,45 +413,7 @@ public class MapActivity extends AppCompatActivity
      *  variable:
      *      NULL
      *
-     *
-    private void getLocationPermission(){
-        //Request location permission, so that we can get the location of the
-        //device. The result of the permission request is handled by a callback,
-        //onRequestPermissionsResult.
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mLocationPermissionGranted = true;
-        } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-        }
-    }
-
-
-
-
-    private void updateLocationUI()
-    {
-        if(mMap ==null)
-            return;
-        try{
-            if(mLocationPermissionGranted){
-                mMap.setMyLocationEnabled(true);
-                mMap.getUiSettings().setMyLocationButtonEnabled(true);
-            }else{
-                mMap.setMyLocationEnabled(false);
-                mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                mLastKnownLocation = null;
-                getLocationPermission();
-            }
-        }catch (SecurityException e)
-        {
-            Log.e("Exception: %s", e.getMessage());
-        }
-    }*/
-    /**
+     **
      * --------------Google API.--------------------
      */
 
@@ -394,7 +421,6 @@ public class MapActivity extends AppCompatActivity
         LatLng l = new LatLng(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
         String state = getLocation(l);
         DatabaseReference loadRef = FirebaseDatabase.getInstance().getReference("Pins/"+state);
-        Log.i("Got","here");
         loadRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -402,12 +428,21 @@ public class MapActivity extends AppCompatActivity
                 {
                     customMarker c = snapshot.getValue(customMarker.class);
                     c.rationalize();
+                    switch (c.Type)
+                    {
+                        case "Recycle":
+                            iconID = R.drawable.ic_recycle;
+                            break;
+                        case "Trash":
+                            iconID = R.drawable.ic_trashicon;
+                            break;
+                    }
                     mMap.addMarker(new MarkerOptions().
                             position(c.retLoc())
-                            .title(c.Title));
-                    Log.i("marker",c.toString());
+                            .icon(BitmapDescriptorFactory.fromBitmap(AppResources.getBitmapfromVector(getBaseContext(),iconID)))
+                            .title(c.Title)
+                            .snippet(c.Snippet));
                 }
-                Log.i("Got","here3");
             }
 
             @Override
@@ -442,14 +477,18 @@ public class MapActivity extends AppCompatActivity
 class customMarker implements Serializable {
     private LatLng loc;
     public String Title;
+    public String Snippet;
+    public String Type;
     public double latude;
     public double lotude;
 
-    customMarker(String s, LatLng l){
+    customMarker(String s, String x,String t, LatLng l){
         loc = l;
         latude = loc.latitude;
         lotude = loc.longitude;
         Title = s;
+        Snippet = x;
+        Type = t;
 
     }
 
@@ -465,17 +504,7 @@ class customMarker implements Serializable {
     @NonNull
     @Override
     public String toString() {
-        return "Title: "+Title + " Latude: " + latude+" Lotude: "+lotude +" "+loc.toString();
+        return "Title: "+Title + " Snippet: "+Snippet +" Latude: " + latude+" Lotude: "+lotude +" "+loc.toString();
     }
-
-    /*
-    public Map<String, Object> toMap(){
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("LatLng",loc);
-        result.put("Title",Title);
-        return result;
-    }
-    */
-
 }
 
