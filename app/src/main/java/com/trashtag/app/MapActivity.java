@@ -422,17 +422,18 @@ public class MapActivity extends AppCompatActivity
     {
         try{
             addresses =  geocoder.getFromLocation(L.latitude,L.longitude,10);
+            for (int i = 0; i < addresses.size();i++)
+            {
+                if(addresses.get(i).getAdminArea() != null)
+                    return addresses.get(i).getAdminArea().replaceAll("[^a-zA-Z]","");
+
+                Log.e("Address:",(addresses.get(i).getAdminArea() != null) ? addresses.get(i).getAdminArea(): "NONE");
+            }
         }catch (Exception e)
         {
             Log.e("Error:",e.getLocalizedMessage());
         }
-        for (int i = 0; i < addresses.size();i++)
-        {
-            if(addresses.get(i).getAdminArea() != null)
-                return addresses.get(i).getAdminArea().replaceAll("[^a-zA-Z]","");
 
-            Log.e("Address:",(addresses.get(i).getAdminArea() != null) ? addresses.get(i).getAdminArea(): "NONE");
-        }
         return "OOPS";
     }
 
