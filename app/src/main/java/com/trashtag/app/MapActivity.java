@@ -2,6 +2,7 @@ package com.trashtag.app;
 
 import android.Manifest;
 import android.animation.Animator;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -14,7 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import android.location.Location;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +51,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.NotNull;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -100,7 +105,6 @@ public class MapActivity extends AppCompatActivity
     private boolean fabMenu = false;
 
 
-
     @Override
     public void onStart(){
         super.onStart();
@@ -111,6 +115,7 @@ public class MapActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EditText mSearchText = (EditText) findViewById(R.id.editText);
         setContentView(R.layout.activity_main);
         // Retrieve location and camera position from saved instance state.
         if (savedInstanceState != null) {
@@ -164,6 +169,25 @@ public class MapActivity extends AppCompatActivity
         });
 
     }
+    public void onMapSearch(View view) {
+        EditText locationSearch = (EditText) findViewById(R.id.editText);
+        String location = locationSearch.getText().toString();
+        List<Address>addressList = null;
+
+        if (location != null || !location.equals("")) {
+            Geocoder geocoder = new Geocoder(this);
+            try {
+                addressList = geocoder.getFromLocationName(location, 1);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Address address = addressList.get(0);
+            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+        }
+    }
 
     private void showFabMenu(){
         Log.i("RAN","showFabMenu");
@@ -206,6 +230,9 @@ public class MapActivity extends AppCompatActivity
             }
         });
     }
+    // search bar init method
+
+
 
     /**
      *  usage:
@@ -390,6 +417,7 @@ public class MapActivity extends AppCompatActivity
      * --------------Google API.--------------------
      */
 
+
     private void loadPins(){
         LatLng l = new LatLng(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
         String state = getLocation(l);
@@ -436,6 +464,7 @@ public class MapActivity extends AppCompatActivity
 
         return "OOPS";
     }
+
 
 }
 
