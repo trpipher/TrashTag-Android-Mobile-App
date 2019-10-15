@@ -1,5 +1,6 @@
 package com.trashtag.app;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -44,6 +45,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.annotations.NotNull;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -97,6 +99,8 @@ public class MapActivity extends AppCompatActivity
     private TextView fab2Word;
     private boolean fabMenu = false;
 
+
+
     @Override
     public void onStart(){
         super.onStart();
@@ -114,12 +118,8 @@ public class MapActivity extends AppCompatActivity
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }
 
-        try {
 
-            mLocationPermissionGranted = getIntent().getBooleanExtra("permissionGranted", false);
-        } catch (Exception e){
-            Log.e("Intent Extras ERROR", e.getLocalizedMessage());
-        }
+
         geocoder = new Geocoder(this);
 
 
@@ -159,7 +159,7 @@ public class MapActivity extends AppCompatActivity
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //loadPins();
+
             }
         });
 
@@ -232,13 +232,14 @@ public class MapActivity extends AppCompatActivity
          * cases when a location is not available.
          */
         try {
-            if (mLocationPermissionGranted) {
+            if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
                 locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
+                            Log.d(TAG, "Current location is found.");
                             mLastKnownLocation = task.getResult();
                             loadPins();
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
@@ -251,6 +252,7 @@ public class MapActivity extends AppCompatActivity
                             Log.e(TAG, "Exception: %s", task.getException());
                             mMap.moveCamera(CameraUpdateFactory
                                     .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
                             //Drap a tag in default location
                             //dropPinOnMap(mDefaultLocation.latitude,mDefaultLocation.longitude);
@@ -259,8 +261,9 @@ public class MapActivity extends AppCompatActivity
                 });
             }
         } catch (SecurityException e)  {
-            Log.e("Exception: %s", e.getMessage());
+            Log.e("Exception: %s","Didnt catch" + e.getLocalizedMessage());
         }
+
     }
     /**
      *  usage:
@@ -345,7 +348,7 @@ public class MapActivity extends AppCompatActivity
      *  variable:
      *      NULL
      *
-     **/
+     *
     private void getLocationPermission(){
         //Request location permission, so that we can get the location of the
         //device. The result of the permission request is handled by a callback,
@@ -360,27 +363,9 @@ public class MapActivity extends AppCompatActivity
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
-    /**
-     *  usage:
-     *      If user respond to the permission request, this function will be callback
-     *
-     **/
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
-        mLocationPermissionGranted = false;
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mLocationPermissionGranted = true;
-                }
-            }
-        }
 
-    }
+
+
 
     private void updateLocationUI()
     {
@@ -400,7 +385,7 @@ public class MapActivity extends AppCompatActivity
         {
             Log.e("Exception: %s", e.getMessage());
         }
-    }
+    }*/
     /**
      * --------------Google API.--------------------
      */
@@ -432,6 +417,7 @@ public class MapActivity extends AppCompatActivity
         });
     }
 
+    @NotNull
     private String getLocation(LatLng L)
     {
         try{
