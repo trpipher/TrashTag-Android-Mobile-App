@@ -11,7 +11,7 @@
     <string name="sign_out">Sign Out</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last name</string>
-    <string name="textview">TextView</string>
+    <string name="username">Username</string>
     <string name="name">Name</string>
     <string name="back">Back</string>
     <string name="my_profile">My Profile</string>
@@ -25,6 +25,13 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="profile_pic">Profile_pic</string>
+    <string name="stars">Stars for picking up pins</string>
+    <string name="trash_pins">How many trash pins a user has picked up.</string>
+    <string name="recyclable_pins">How many recyclable pins a user has picked up.</string>
+
+
+
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
