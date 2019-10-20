@@ -31,6 +31,14 @@
     <string name="recyclable_pins">How many recyclable pins a user has picked up.</string>
 
 
+    <string name="about_trashtag">About #TrashTag</string>
+    <string name="creators">Creators:</string>
+    <string name="creators_names">Thomas Pipher Jansen Howell Shankar Sharma Long Li</string>
+    <string name="about_text">TrashTag has a one mission: To make the world a cleaner place. We, the creators of TrashTag, aspired to create a useful tool to bring communities, organizations, non-profits, or just a group of friends together to preserve our most precious gift.</string>
+    <string name="about_logo">Logos for decor</string>
+
+
+
 
 
     <string name="menu_home">Home</string>
