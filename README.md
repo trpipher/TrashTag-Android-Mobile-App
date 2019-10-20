@@ -21,6 +21,8 @@ Official Repo for the CSC 414 group project.
 
 -> initialize git: `git init`
 
+-> get latest repo version: `git pull origin master`
+
 -> add files: `git add .`
 
 -> commit the files: `git commit -m "put a message about the update here"`
