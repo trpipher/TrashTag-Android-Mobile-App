@@ -15,7 +15,6 @@
     <string name="name">Name</string>
     <string name="back">Back</string>
     <string name="my_profile">My Profile</string>
-    <string name="settings">Settings</string>
     <string name="about">About</string>
     <string name="logo">trashtag_logo</string>
     <string name="title_activity_nav_drawer">NavDrawer</string>
@@ -38,9 +37,6 @@
     <string name="about_logo">Logos for decor</string>
 
 
-
-
-
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
@@ -48,6 +44,11 @@
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
     <string name="search">Search</string>
+    <string name="settings">Settings</string>
+    <string name="title_activity_bottom_nav">bottom_nav</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 
 
 </resources>

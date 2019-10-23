@@ -14,7 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".About"></activity>
+        <activity
+            android:name=".bottom_nav"
+            android:label="@string/title_activity_bottom_nav"></activity>
+        <activity android:name=".About" />
         <activity
             android:name=".NavDrawer"
             android:label="@string/title_activity_nav_drawer"
