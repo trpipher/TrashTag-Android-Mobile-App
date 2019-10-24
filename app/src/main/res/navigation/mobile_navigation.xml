@@ -3,41 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
-
-    <fragment
-        android:id="@+id/nav_home"
-        android:name="com.trashtag.app.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
-
-    <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.trashtag.app.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
-
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.trashtag.app.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
-
-    <fragment
-        android:id="@+id/nav_tools"
-        android:name="com.trashtag.app.ui.tools.ToolsFragment"
-        android:label="@string/menu_tools"
-        tools:layout="@layout/fragment_tools" />
-
-    <fragment
-        android:id="@+id/nav_share"
-        android:name="com.trashtag.app.ui.share.ShareFragment"
-        android:label="@string/menu_share"
-        tools:layout="@layout/fragment_share" />
-
-    <fragment
-        android:id="@+id/nav_send"
-        android:name="com.trashtag.app.ui.send.SendFragment"
-        android:label="@string/menu_send"
-        tools:layout="@layout/fragment_send" />
+    app:startDestination="@id/mapActivity">
+    <Fragment
+        android:id="@+id/mapActivity"
+        android:name="com.trashtag.app.MapActivity"
+        android:label="activity_map"
+        tools:layout="@layout/activity_map" />
+    <activity
+        android:id="@+id/profile"
+        android:name="com.trashtag.app.Profile"
+        android:label="activity_profile"
+        tools:layout="@layout/activity_profile" />
+    <activity
+        android:id="@+id/about"
+        android:name="com.trashtag.app.About"
+        android:label="activity_about"
+        tools:layout="@layout/activity_about" />
+    <activity
+        android:id="@+id/mainMenu"
+        android:name="com.trashtag.app.MainMenu"
+        android:label="activity_main_menu"
+        tools:layout="@layout/activity_main_menu" />
 </navigation>
