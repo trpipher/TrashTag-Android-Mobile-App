@@ -391,13 +391,13 @@ public class MapActivity extends AppCompatActivity
     @Override
     public void onMapClick(LatLng point) {
         //Just drop a tag where the user clicked
-       /* if(creatingPin) {
+        if(creatingPin) {
             if(lastPin != null)
                 lastPin.remove();
             dropPinOnMap(point.latitude, point.longitude);
         }
 
-        */
+
     }
 
     @Override
