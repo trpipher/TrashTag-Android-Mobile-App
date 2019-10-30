@@ -11,21 +11,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 public class Profile extends AppCompatActivity {
 
-    Button btn_Back;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // Back Button
-        btn_Back = findViewById(R.id.home);
-        btn_Back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MainMenu.class);
-                startActivity(intent);
-            }
-        });
+
+        }
     }
-}

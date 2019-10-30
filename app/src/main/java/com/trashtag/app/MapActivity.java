@@ -2,6 +2,7 @@ package com.trashtag.app;
 
 import android.Manifest;
 import android.animation.Animator;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -15,8 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.location.Location;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -159,6 +158,7 @@ public class MapActivity extends AppCompatActivity
 
             }
         });
+
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -220,11 +220,32 @@ public class MapActivity extends AppCompatActivity
             }
         });
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.pro);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MapActivity.this, Profile.class));
+            }
+        });
+        FloatingActionButton faba = (FloatingActionButton) findViewById(R.id.home);
+        faba.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MapActivity.this, MainMenu.class));
+            }
+        });
+        FloatingActionButton fabb = (FloatingActionButton) findViewById(R.id.reward);
+        fabb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MapActivity.this, Profile.class));
+            }
+        });
+
 
 
 
     }
-
     private void showFabConfirms(){
         fabConfirm.show();
         fabCancel.show();
@@ -242,6 +263,7 @@ public class MapActivity extends AppCompatActivity
         fab1Layout.animate().translationY(-getResources().getDimension(R.dimen.fab1_translate));
         fab2Layout.animate().translationY(-getResources().getDimension(R.dimen.fab2_translate));
     }
+
     private void closeFabMenu(){
         Log.i("RAN","closeFabMenu");
         fab1Word.setVisibility(View.INVISIBLE);
