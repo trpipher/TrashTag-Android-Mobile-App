@@ -17,11 +17,11 @@ public class Settings extends AppCompatActivity {
 
             btnMap = findViewById(R.id.home);
             btnMap.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getApplicationContext(), Settings.class);
-                    startActivity(intent);
-                }
-            });
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), MainMenu.class);
+                startActivity(intent);
+            }
+        });
     }
 }

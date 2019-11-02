@@ -29,6 +29,7 @@
     <string name="trash_pins">How many trash pins a user has picked up.</string>
     <string name="recyclable_pins">How many recyclable pins a user has picked up.</string>
 
+    <string name="trashtag">#TrashTag</string>
 
     <string name="about_trashtag">About #TrashTag</string>
     <string name="creators">Creators:</string>
