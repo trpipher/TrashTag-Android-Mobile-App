@@ -44,7 +44,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.NotNull;
-
+import com.trashtag.app.CustomInfoWindowAdapter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -54,7 +54,9 @@ import java.util.List;
 //--------For Google Map API---------------
 
 public class MapActivity extends AppCompatActivity
-        implements OnMapReadyCallback,OnMapClickListener, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
+        implements OnMapReadyCallback,OnMapClickListener, GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnMyLocationButtonClickListener,
+        GoogleMap.OnMyLocationClickListener {
     //Debug use only
     private String TAG="TrashTag";
     //Handle of the google map
@@ -165,7 +167,7 @@ public class MapActivity extends AppCompatActivity
                 creatingPin = true;
                 typeOfPin = "Trash";
                 iconID = R.drawable.ic_trashicon;
-                dropPinOnMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
+                dropPinOnMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude(),true,null,null);
                 showFabConfirms();
             }
         });
@@ -176,7 +178,7 @@ public class MapActivity extends AppCompatActivity
                 creatingPin = true;
                 typeOfPin = "Recycling";
                 iconID = R.drawable.ic_recycle;
-                dropPinOnMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
+                dropPinOnMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude(),true,null,null);
                 showFabConfirms();
             }
         });
@@ -360,19 +362,41 @@ public class MapActivity extends AppCompatActivity
      *  variable:
      *      Latitude: double type. Latitude of the location.
      *      Longitude: double type. Longitude of the location.
+     *      NewPin   : boolean type, whether this is new pin or load pin from database
+     *      Title    : String type, only when NewPin==False needed.
+     *      Snippet  : String type, only when NewPin==False needed.
      *
      **/
-    private void dropPinOnMap(double Latitude,double Longitude) {
+    private void dropPinOnMap(double Latitude,double Longitude,boolean NewPin,String Title,String Snippet) {
         //Draw a tag on the map
-        Date d = new Date(System.currentTimeMillis());
-        SimpleDateFormat sdf = new SimpleDateFormat(("MM-dd-YY HH:mm"));
-        LatLng latLng = new LatLng(Latitude, Longitude);
-        String Title = typeOfPin;
+        String snippet;
+        LatLng latLng;
+        String title;
+
+        if ( NewPin == true)
+        {
+            //This is a new pin
+            Date d = new Date(System.currentTimeMillis());
+            SimpleDateFormat sdf = new SimpleDateFormat(("MM-dd-YY HH:mm"));
+            latLng = new LatLng(Latitude, Longitude);
+            title = typeOfPin;
+            snippet="Created on: "+sdf.format(d);
+        }
+        else
+        {
+            //This is old pin,load from database
+            latLng = new LatLng(Latitude, Longitude);
+            title = Title;
+            snippet=Snippet;
+        }
+        //Set Custom InfoWindow Adapter
+        CustomInfoWindowAdapter adapter = new CustomInfoWindowAdapter(MapActivity.this);
+        mMap.setInfoWindowAdapter(adapter);
         lastPin = mMap.addMarker(new MarkerOptions()
                 .position(latLng)
                 .icon(BitmapDescriptorFactory.fromBitmap(AppResources.getBitmapfromVector(this,iconID)))
-                .title(Title)
-                .snippet("Created on: "+sdf.format(d)));
+                .title(title)
+                .snippet(snippet));
 
 
     }
@@ -396,11 +420,10 @@ public class MapActivity extends AppCompatActivity
         mMap.setOnMyLocationClickListener(this);
         //Set the main activity as the click listener
         mMap.setOnMapClickListener(this);
-
+        mMap.setOnMarkerClickListener(this);
 
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
-
 
     }
     /**
@@ -416,12 +439,15 @@ public class MapActivity extends AppCompatActivity
         if(creatingPin) {
             if(lastPin != null)
                 lastPin.remove();
-            dropPinOnMap(point.latitude, point.longitude);
+            dropPinOnMap(point.latitude, point.longitude,true,null,null);
         }
-
-
     }
 
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        marker.showInfoWindow();
+        return false;
+    }
     @Override
     public void onMyLocationClick(@NonNull Location location) {
 
@@ -434,6 +460,7 @@ public class MapActivity extends AppCompatActivity
         // (the camera animates to the user's current position).
         return false;
     }
+
     /**
      *  usage:
      *      Ask user for permission state in AndroidManifest.xml.
@@ -464,11 +491,7 @@ public class MapActivity extends AppCompatActivity
                             iconID = R.drawable.ic_trashicon;
                             break;
                     }
-                    mMap.addMarker(new MarkerOptions().
-                            position(c.retLoc())
-                            .icon(BitmapDescriptorFactory.fromBitmap(AppResources.getBitmapfromVector(getBaseContext(),iconID)))
-                            .title(c.Title)
-                            .snippet(c.Snippet));
+                    dropPinOnMap(c.retLoc().latitude,c.retLoc().longitude,false,c.Title,c.Snippet);
                 }
             }
 
