@@ -1,9 +1,7 @@
 package com.trashtag.app;
 
 import android.Manifest;
-import android.animation.Animator;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -14,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.location.Location;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -44,10 +41,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.NotNull;
-import com.trashtag.app.CustomInfoWindowAdapter;
-import java.io.IOException;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -68,9 +65,8 @@ public class MapActivity extends AppCompatActivity
     // when location permission isn't granted.
     private final LatLng mDefaultLocation = new LatLng(31.329749, -81.334187);
     private static final int DEFAULT_ZOOM = 15;
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    //Flag of whether permission is granted by user
-    private boolean mLocationPermissionGranted;
+
+
 
 
     // The geographical location where the device is currently located.
@@ -84,25 +80,26 @@ public class MapActivity extends AppCompatActivity
     // Keys for storing activity state.
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
-    //Total Tag number on  the map
-    private int TotalNum=0;
+
     private DatabaseReference databaseReference;
+    private ArrayList<DataSnapshot> sever_pin_list=new ArrayList<DataSnapshot>();
 
 
-    private FloatingActionButton fab;
-    private FloatingActionButton fab1;
-    private FloatingActionButton fab2;
+
+
+    private FloatingActionButton fab_add;
+    private FloatingActionButton fab_del;
     private FloatingActionButton fabConfirm;
     private FloatingActionButton fabCancel;
-    private LinearLayout fabMLayout;
-    private LinearLayout fab1Layout;
-    private LinearLayout fab2Layout;
-    private TextView fab1Word;
-    private TextView fab2Word;
+    private LinearLayout fab_add_Layout;
+    private LinearLayout fab_del_Layout;
+    private TextView fab_del_Word;
+    private boolean fab_del_show = false;
 
 
-    private boolean fabMenu = false;
-    private boolean creatingPin = false;
+
+    private boolean create_Pin = false;
+    private boolean delete_Pin = false;
     private int iconID;
     private Marker lastPin;
     private String typeOfPin;
@@ -132,66 +129,58 @@ public class MapActivity extends AppCompatActivity
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        fab = findViewById(R.id.fabMain);
-        fab1 = findViewById(R.id.fab1);
-        fab2 = findViewById(R.id.fab2);
+        fab_add = findViewById(R.id.fab_add);
+        fab_add_Layout = findViewById(R.id.fab_add_Layout);
+
+        fab_del = findViewById(R.id.fab_del);
+        fab_del_Word = findViewById(R.id.fab_del_Text);
+        fab_del_Layout = findViewById(R.id.fab_del_Layout);
         fabCancel = findViewById(R.id.fabPinCancel);
         fabConfirm = findViewById(R.id.fabPinConfirm);
-        fab1Word = findViewById(R.id.fab1Text);
-        fab2Word = findViewById(R.id.fab2Text);
-        fabMLayout = findViewById(R.id.fabMainLayout);
-        fab1Layout = findViewById(R.id.fab1Layout);
-        fab2Layout = findViewById(R.id.fab2Layout);
 
         closeFabConfirms();
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        fab_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!fabMenu)
-                {
-                    fabMenu = true;
-                    showFabMenu();
-                }
-                else{
-                    fabMenu = false;
-                    closeFabMenu();
-                }
-
-            }
-        });
-
-        fab1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                creatingPin = true;
+                create_Pin = true;
                 typeOfPin = "Trash";
-                iconID = R.drawable.ic_trashicon;
-                dropPinOnMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude(),true,null,null);
-                showFabConfirms();
-            }
-        });
-
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                creatingPin = true;
-                typeOfPin = "Recycling";
                 iconID = R.drawable.ic_recycle;
                 dropPinOnMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude(),true,null,null);
                 showFabConfirms();
+
             }
         });
+
+        fab_del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                delete_Pin = true;
+                showFabConfirms();
+            }
+        });
+
 
         fabCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                creatingPin = false;
-                if(lastPin != null) {
-                    lastPin.remove();
-                    lastPin = null;
+                if(create_Pin ==true)
+                {
+                    create_Pin = false;
+                    if(lastPin != null) {
+                        lastPin.remove();
+                        lastPin = null;
 
+                    }
                 }
+                else if(delete_Pin == true)
+                {
+                    delete_Pin = false;
+                    if(lastPin != null) {
+                        lastPin = null;
+                    }
+                }
+
                 closeFabConfirms();
             }
         });
@@ -200,19 +189,27 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 if(lastPin!= null) {
-                    creatingPin = false;
-                    String type = "";
-                    switch (iconID){
-                        case R.drawable.ic_recycle:
-                            type = "Recycle";
-                            break;
-                        case R.drawable.ic_trashicon:
-                            type = "Trash";
-                            break;
+                    LatLng l = new LatLng(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
+                    String state = getLocation(l);
+                    DatabaseReference loadRef = FirebaseDatabase.getInstance().getReference("Pins/"+state);
+                    if (create_Pin)
+                    {
+                        DataSnapshot snapshot;
+                        create_Pin = false;
+
+                        customMarker c = new customMarker(lastPin.getTitle(),
+                                lastPin.getSnippet(), "Trash",lastPin.getPosition());
+                        databaseReference.child("Pins").child(getLocation(lastPin.getPosition()))
+                                .push().setValue(c);
 
                     }
-                    customMarker c = new customMarker(lastPin.getTitle(),lastPin.getSnippet(), type,lastPin.getPosition());
-                    databaseReference.child("Pins").child(getLocation(lastPin.getPosition())).push().setValue(c);
+                    else if(delete_Pin)
+                    {
+                        delete_Pin=false;
+                        delete_pin(lastPin);
+                        lastPin.remove();
+                        closeFabDel();
+                    }
                     lastPin = null;
                     closeFabConfirms();
                 }
@@ -248,6 +245,35 @@ public class MapActivity extends AppCompatActivity
 
 
     }
+    //Delete a pin from server & local
+    private void delete_pin(Marker marker)
+    {
+        if(sever_pin_list.isEmpty())
+            return;
+       int size=sever_pin_list.size();
+       DataSnapshot snapshot;
+       String key="";
+       for(int i=0;i<size;i++)
+       {
+           snapshot=sever_pin_list.get(i);
+           customMarker c = snapshot.getValue(customMarker.class);
+           c.rationalize();
+           if( (c.latude==marker.getPosition().latitude)&&(c.lotude==marker.getPosition().longitude))
+           {
+               // Remove from sever
+               key=snapshot.getKey();
+               databaseReference.child("Pins").child(getLocation(lastPin.getPosition()))
+                       .child(key).removeValue();
+               // remove from local list
+               sever_pin_list.remove(i);
+               // Finish delete
+               return;
+           }
+
+
+
+       }
+    }
     private void showFabConfirms(){
         fabConfirm.show();
         fabCancel.show();
@@ -258,47 +284,25 @@ public class MapActivity extends AppCompatActivity
         fabCancel.hide();
     }
 
-    private void showFabMenu(){
-        Log.i("RAN","showFabMenu");
-        fab1Layout.setVisibility(View.VISIBLE);
-        fab2Layout.setVisibility(View.VISIBLE);
-        fab1Layout.animate().translationY(-getResources().getDimension(R.dimen.fab1_translate));
-        fab2Layout.animate().translationY(-getResources().getDimension(R.dimen.fab2_translate));
+    private void showFabDel(){
+        if(!fab_del_show) {
+            fab_add.setClickable(false);
+            fab_del_show = true;
+            Log.i("RAN","showFabDel");
+            fab_del_Layout.setVisibility(View.VISIBLE);
+            fab_del_Word.setVisibility(View.VISIBLE);
+        }
+
     }
 
-    private void closeFabMenu(){
-        Log.i("RAN","closeFabMenu");
-        fab1Word.setVisibility(View.INVISIBLE);
-        fab2Word.setVisibility(View.INVISIBLE);
-        fab1Layout.animate().translationY(0);
-        fab2Layout.animate().translationY(0).setListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if(!fabMenu)
-                {
-                    fab1Layout.setVisibility(View.GONE);
-                    fab2Layout.setVisibility(View.GONE);
-                    fab1Word.setVisibility(View.VISIBLE);
-                    fab2Word.setVisibility(View.VISIBLE);
-                }
-
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
+    private void closeFabDel(){
+        if(fab_del_show) {
+            fab_add.setClickable(true);
+            fab_del_show = false;
+            Log.i("RAN", "closeFabDel");
+            fab_del_Word.setVisibility(View.INVISIBLE);
+            fab_del_Layout.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -436,16 +440,28 @@ public class MapActivity extends AppCompatActivity
     @Override
     public void onMapClick(LatLng point) {
         //Just drop a tag where the user clicked
-        if(creatingPin) {
+        if(create_Pin) {
             if(lastPin != null)
                 lastPin.remove();
+            else
+            {
+                lastPin = null;
+                closeFabDel();
+            }
             dropPinOnMap(point.latitude, point.longitude,true,null,null);
+        }
+        else
+        {
+            lastPin = null;
+            closeFabDel();
         }
     }
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
         marker.showInfoWindow();
+        showFabDel();
+        lastPin=marker;
         return false;
     }
     @Override
@@ -480,17 +496,11 @@ public class MapActivity extends AppCompatActivity
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot: dataSnapshot.getChildren())
                 {
+                    sever_pin_list.add(snapshot);
                     customMarker c = snapshot.getValue(customMarker.class);
                     c.rationalize();
-                    switch (c.Type)
-                    {
-                        case "Recycle":
-                            iconID = R.drawable.ic_recycle;
-                            break;
-                        case "Trash":
-                            iconID = R.drawable.ic_trashicon;
-                            break;
-                    }
+
+                    iconID = R.drawable.ic_recycle;
                     dropPinOnMap(c.retLoc().latitude,c.retLoc().longitude,false,c.Title,c.Snippet);
                 }
             }
@@ -539,7 +549,6 @@ class customMarker implements Serializable {
         Title = s;
         Snippet = x;
         Type = t;
-
     }
 
     void rationalize(){
