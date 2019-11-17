@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">TrashTag</string>
     <string name="button">First Name</string>
-    <string name="fab_add_Name">New Trash</string>
-    <string name="fab_del_Name">Recycle</string>
+    <string name="fab_trash_Name">New Trash</string>
+    <string name="fab_recycle_Name">Recyclable</string>
+    <string name="fab_new_Name">New Pin</string>
+    <string name="fab_del_Name">Delete</string>
     <string name="title_activity_profile">Profile</string>
     <string name="mapBtnText">View Map</string>
     <string name="Back">home</string>

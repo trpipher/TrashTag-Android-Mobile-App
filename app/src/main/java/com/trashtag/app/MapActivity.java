@@ -1,6 +1,7 @@
 package com.trashtag.app;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -87,17 +88,19 @@ public class MapActivity extends AppCompatActivity
 
 
 
-    private FloatingActionButton fab_add;
-    private FloatingActionButton fab_del;
+    private FloatingActionButton fab_NewOrDel;
+    private FloatingActionButton fab_trash;
+	private FloatingActionButton fab_recyclable;
     private FloatingActionButton fabConfirm;
     private FloatingActionButton fabCancel;
-    private LinearLayout fab_add_Layout;
-    private LinearLayout fab_del_Layout;
-    private TextView fab_del_Word;
-    private boolean fab_del_show = false;
+    private LinearLayout fab_trash_Layout;
+    private LinearLayout fab_recyclable_Layout;
+    private TextView fab_NewOrDel_Word;
+    private TextView fab_trash_Word;
+    private TextView fab_recyclable_Word;
 
-
-
+	private boolean showFabMenu = false;
+    private boolean isDelFab = false;
     private boolean create_Pin = false;
     private boolean delete_Pin = false;
     private int iconID;
@@ -129,33 +132,58 @@ public class MapActivity extends AppCompatActivity
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        fab_add = findViewById(R.id.fab_add);
-        fab_add_Layout = findViewById(R.id.fab_add_Layout);
+        fab_NewOrDel = findViewById(R.id.fab_NewOrDel);
+        fab_NewOrDel_Word = findViewById(R.id.fab_NewOrDel_Text);
 
-        fab_del = findViewById(R.id.fab_del);
-        fab_del_Word = findViewById(R.id.fab_del_Text);
-        fab_del_Layout = findViewById(R.id.fab_del_Layout);
+        fab_trash = findViewById(R.id.fab_trash);
+        fab_trash_Word = findViewById(R.id.fab_trash_Text);
+        fab_trash_Layout = findViewById(R.id.fab_trash_Layout);
         fabCancel = findViewById(R.id.fabPinCancel);
         fabConfirm = findViewById(R.id.fabPinConfirm);
+		fab_recyclable = findViewById(R.id.fab_recyclable);
+		fab_recyclable_Word = findViewById(R.id.fab_recyclable_Text);
+		fab_recyclable_Layout = findViewById(R.id.fab_recyclable_Layout);
 
         closeFabConfirms();
 
-        fab_add.setOnClickListener(new View.OnClickListener() {
+        fab_NewOrDel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isDelFab==true)
+                {
+					delete_Pin = true;
+                	showFabConfirms();
+                }
+                else
+                {
+                    if(!showFabMenu)
+                        showFabMenu();
+                    else
+                        closeFabMenu();
+                }
+
+            }
+        });
+
+        fab_trash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 create_Pin = true;
                 typeOfPin = "Trash";
-                iconID = R.drawable.ic_recycle;
+                iconID = R.drawable.ic_trashicon;
                 dropPinOnMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude(),true,null,null);
                 showFabConfirms();
 
             }
         });
 
-        fab_del.setOnClickListener(new View.OnClickListener() {
+        fab_recyclable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                delete_Pin = true;
+                create_Pin = true;
+                typeOfPin = "Recycling";
+                iconID = R.drawable.ic_recycle;
+                dropPinOnMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude(),true,null,null);
                 showFabConfirms();
             }
         });
@@ -176,6 +204,7 @@ public class MapActivity extends AppCompatActivity
                 else if(delete_Pin == true)
                 {
                     delete_Pin = false;
+                    switchMainButton(false);
                     if(lastPin != null) {
                         lastPin = null;
                     }
@@ -196,9 +225,18 @@ public class MapActivity extends AppCompatActivity
                     {
                         DataSnapshot snapshot;
                         create_Pin = false;
+						String type = "";
+						switch (iconID){
+                        case R.drawable.ic_recycle:
+                            type = "Recycle";
+                            break;
+                        case R.drawable.ic_trashicon:
+                            type = "Trash";
+                            break;
 
+                    	}
                         customMarker c = new customMarker(lastPin.getTitle(),
-                                lastPin.getSnippet(), "Trash",lastPin.getPosition());
+                                lastPin.getSnippet(), type,lastPin.getPosition());
                         databaseReference.child("Pins").child(getLocation(lastPin.getPosition()))
                                 .push().setValue(c);
 
@@ -207,8 +245,9 @@ public class MapActivity extends AppCompatActivity
                     {
                         delete_Pin=false;
                         delete_pin(lastPin);
+                        switchMainButton(false);
                         lastPin.remove();
-                        closeFabDel();
+
                     }
                     lastPin = null;
                     closeFabConfirms();
@@ -283,26 +322,77 @@ public class MapActivity extends AppCompatActivity
         fabConfirm.hide();
         fabCancel.hide();
     }
+    private void switchMainButton(boolean isSwitch2Del)
+    {
+        if (isSwitch2Del== true)
+        {
+            isDelFab=true;
+            closeFabMenu();
+            fab_NewOrDel_Word.setText(R.string.fab_del_Name);
+            fab_NewOrDel.setBackgroundTintList(getResources().getColorStateList(R.color.red));
+            fab_NewOrDel.setImageResource(R.drawable.ic_delete);
 
-    private void showFabDel(){
-        if(!fab_del_show) {
-            fab_add.setClickable(false);
-            fab_del_show = true;
-            Log.i("RAN","showFabDel");
-            fab_del_Layout.setVisibility(View.VISIBLE);
-            fab_del_Word.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            isDelFab=false;
+            fab_NewOrDel_Word.setText(R.string.fab_new_Name);
+            fab_NewOrDel.setBackgroundTintList(getResources().getColorStateList(R.color.white));
+            fab_NewOrDel.setImageResource(R.drawable.ic_new);
+        }
+    }
+    private void showFabMenu(){
+        if(showFabMenu==false)
+        {
+            showFabMenu=true;
+            Log.i("RAN","showFabMenu");
+            fab_trash_Layout.setVisibility(View.VISIBLE);
+            fab_recyclable_Layout.setVisibility(View.VISIBLE);
+            fab_trash_Layout.animate().translationY(-getResources().getDimension(R.dimen.fab1_translate));
+            fab_recyclable_Layout.animate().translationY(-getResources().getDimension(R.dimen.fab2_translate));
         }
 
     }
 
-    private void closeFabDel(){
-        if(fab_del_show) {
-            fab_add.setClickable(true);
-            fab_del_show = false;
-            Log.i("RAN", "closeFabDel");
-            fab_del_Word.setVisibility(View.INVISIBLE);
-            fab_del_Layout.setVisibility(View.GONE);
+    private void closeFabMenu(){
+        if(showFabMenu==true)
+        {
+            showFabMenu=false;
+            Log.i("RAN","closeFabMenu");
+            fab_trash_Word.setVisibility(View.INVISIBLE);
+            fab_recyclable_Word.setVisibility(View.INVISIBLE);
+            fab_trash_Layout.animate().translationY(0);
+            fab_recyclable_Layout.animate().translationY(0).setListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    if(!showFabMenu)
+                    {
+                        fab_trash_Layout.setVisibility(View.GONE);
+                        fab_recyclable_Layout.setVisibility(View.GONE);
+                        fab_trash_Word.setVisibility(View.VISIBLE);
+                        fab_recyclable_Word.setVisibility(View.VISIBLE);
+                    }
+
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
         }
+
     }
 
     /**
@@ -446,22 +536,25 @@ public class MapActivity extends AppCompatActivity
             else
             {
                 lastPin = null;
-                closeFabDel();
+                switchMainButton(false);
             }
             dropPinOnMap(point.latitude, point.longitude,true,null,null);
         }
         else
         {
             lastPin = null;
-            closeFabDel();
+            switchMainButton(false);
         }
     }
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
+        // If add a new pin, then don't show info window
+        if (create_Pin == true)
+            return true;
         marker.showInfoWindow();
-        showFabDel();
-        lastPin=marker;
+        switchMainButton(true);
+		lastPin=marker;
         return false;
     }
     @Override
@@ -499,8 +592,15 @@ public class MapActivity extends AppCompatActivity
                     sever_pin_list.add(snapshot);
                     customMarker c = snapshot.getValue(customMarker.class);
                     c.rationalize();
-
-                    iconID = R.drawable.ic_recycle;
+                    switch (c.Type)
+                    {
+                        case "Recycle":
+                            iconID = R.drawable.ic_recycle;
+                            break;
+                        case "Trash":
+                            iconID = R.drawable.ic_trashicon;
+                            break;
+                    }
                     dropPinOnMap(c.retLoc().latitude,c.retLoc().longitude,false,c.Title,c.Snippet);
                 }
             }
