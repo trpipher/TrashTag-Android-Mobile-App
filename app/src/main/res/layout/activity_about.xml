@@ -9,12 +9,12 @@
 
     <TextView
         android:id="@+id/about_text"
-        android:layout_width="313dp"
-        android:layout_height="192dp"
+        android:layout_width="311dp"
+        android:layout_height="303dp"
         android:fontFamily="@font/acme"
         android:text="@string/about_text"
         android:textColor="#000"
-        android:textSize="20sp"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,16 +22,16 @@
 
     <ImageView
         android:id="@+id/about_logo2"
-        android:layout_width="69dp"
-        android:layout_height="56dp"
+        android:layout_width="65dp"
+        android:layout_height="57dp"
         android:layout_marginEnd="60dp"
         android:contentDescription="@string/about_logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.989"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/about_text"
-        app:layout_constraintVertical_bias="0.057"
+        app:layout_constraintVertical_bias="0.055"
         app:srcCompat="@drawable/ic_recycle" />
 
     <TextView
@@ -50,45 +50,59 @@
 
     <TextView
         android:id="@+id/creators_names"
-        android:layout_width="128dp"
-        android:layout_height="100dp"
+        android:layout_width="147dp"
+        android:layout_height="118dp"
         android:fontFamily="@font/acme"
         android:text="@string/creators_names"
         android:textColor="#3D472A"
-        android:textSize="19sp"
+        android:textSize="21sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.558"
+        app:layout_constraintHorizontal_bias="0.511"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/creators"
-        app:layout_constraintVertical_bias="0.058" />
+        app:layout_constraintVertical_bias="0.067" />
 
     <ImageView
         android:id="@+id/about_logo1"
-        android:layout_width="87dp"
+        android:layout_width="84dp"
         android:layout_height="88dp"
         android:layout_marginStart="48dp"
         android:contentDescription="@string/about_logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/about_logo2"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.007"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/about_text"
-        app:layout_constraintVertical_bias="0.005"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@mipmap/trashtag_logo_foreground" />
 
     <TextView
         android:id="@+id/creators"
         android:layout_width="89dp"
         android:layout_height="34dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="28dp"
         android:fontFamily="@font/pacifico"
         android:text="@string/creators"
         android:textColor="#696565"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/about_text" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="359dp"
+        android:layout_height="33dp"
+        android:fontFamily="@font/acme"
+        android:text="@string/repo"
+        android:textColor="#000000"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.653"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/creators_names"
+        app:layout_constraintVertical_bias="0.2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

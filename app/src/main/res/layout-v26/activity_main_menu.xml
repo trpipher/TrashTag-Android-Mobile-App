@@ -11,43 +11,46 @@
         android:id="@+id/logo"
         android:layout_width="233dp"
         android:layout_height="215dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="20dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/logo"
-        app:layout_constraintBottom_toTopOf="@+id/profile_id"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.449"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnMap"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@mipmap/trashtag_logo_foreground" />
 
     <Button
         android:id="@+id/profile_id"
-        android:layout_width="267dp"
-        android:layout_height="51dp"
-        android:layout_marginTop="216dp"
+        android:layout_width="129dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="220dp"
         android:background="#8EE22C"
         android:fontFamily="@font/basic"
         android:text="@string/my_profile"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.451"
+        app:layout_constraintHorizontal_bias="0.23"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnMap" />
+        app:layout_constraintTop_toBottomOf="@+id/btnMap"
+        app:layout_constraintVertical_bias="0.154" />
 
     <Button
         android:id="@+id/settings_id"
-        android:layout_width="129dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="96dp"
         android:background="#8EE22C"
         android:fontFamily="@font/basic"
         android:text="@string/settings"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/profile_id"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/profile_id"
-        app:layout_constraintTop_toBottomOf="@+id/profile_id" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.453"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btnMap"
@@ -67,15 +70,17 @@
         android:id="@+id/about_id"
         android:layout_width="129dp"
         android:layout_height="43dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginEnd="76dp"
         android:background="#8EE22C"
         android:fontFamily="@font/basic"
         android:text="@string/about"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/profile_id"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/profile_id"
-        app:layout_constraintTop_toBottomOf="@+id/profile_id" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintStart_toEndOf="@+id/profile_id"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.664" />
 
     <EditText
         android:id="@+id/editText"
