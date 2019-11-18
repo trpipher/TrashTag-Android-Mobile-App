@@ -14,16 +14,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-          <activity android:name=".About" />
-
-        <activity android:name=".Settings" />
-        <activity android:name=".Profile" />
-        <activity android:name=".MainMenu">
+        <activity android:name=".AppStartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".About" />
+        <activity android:name=".Settings" />
+        <activity android:name=".Profile" />
+        <activity android:name=".MainMenu">
         </activity>
         <activity android:name=".MapActivity" /> <!-- Google Map Library -->
         <meta-data

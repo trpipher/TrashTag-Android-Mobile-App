@@ -38,7 +38,8 @@
     <string name="about_text">TrashTag has a one mission: To make the world a cleaner place. We, the creators of TrashTag, aspired to create a useful tool to bring communities, organizations, non-profits, or just a group of friends together to preserve our most precious gift.</string>
     <string name="about_logo">Logos for decor</string>
     <string name="repo">GitHub Repo: https://github.com/jbentleyh/CSC-414-Project.com </string>
-
+    <string name="trashPlaced">trash pins placed</string>
+    <string name="recyclePlaced">recyclable pins placed</string>
 
 
     <string name="menu_home">Home</string>

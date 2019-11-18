@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -83,7 +84,7 @@ public class MapActivity extends AppCompatActivity
     private static final String KEY_LOCATION = "location";
 
     private DatabaseReference databaseReference;
-    private ArrayList<DataSnapshot> sever_pin_list=new ArrayList<DataSnapshot>();
+    private ArrayList<DataSnapshot> server_pin_list=new ArrayList<DataSnapshot>();
 
 
 
@@ -239,6 +240,7 @@ public class MapActivity extends AppCompatActivity
                                 lastPin.getSnippet(), type,lastPin.getPosition());
                         databaseReference.child("Pins").child(getLocation(lastPin.getPosition()))
                                 .push().setValue(c);
+                        User.user.updatePinScore(typeOfPin);
 
                     }
                     else if(delete_Pin)
@@ -257,6 +259,8 @@ public class MapActivity extends AppCompatActivity
                 }
             }
         });
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.pro);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -284,33 +288,26 @@ public class MapActivity extends AppCompatActivity
 
 
     }
+
     //Delete a pin from server & local
     private void delete_pin(Marker marker)
     {
-        if(sever_pin_list.isEmpty())
+        if(server_pin_list.isEmpty())
             return;
-       int size=sever_pin_list.size();
-       DataSnapshot snapshot;
-       String key="";
-       for(int i=0;i<size;i++)
-       {
-           snapshot=sever_pin_list.get(i);
+        String key="";
+        for(DataSnapshot snapshot : server_pin_list){
            customMarker c = snapshot.getValue(customMarker.class);
            c.rationalize();
            if( (c.latude==marker.getPosition().latitude)&&(c.lotude==marker.getPosition().longitude))
            {
                // Remove from sever
                key=snapshot.getKey();
-               databaseReference.child("Pins").child(getLocation(lastPin.getPosition()))
-                       .child(key).removeValue();
+               databaseReference.child("Pins").child(getLocation(lastPin.getPosition())).child(key).removeValue();
                // remove from local list
-               sever_pin_list.remove(i);
+               server_pin_list.remove(snapshot);
                // Finish delete
                return;
            }
-
-
-
        }
     }
     private void showFabConfirms(){
@@ -475,6 +472,7 @@ public class MapActivity extends AppCompatActivity
             latLng = new LatLng(Latitude, Longitude);
             title = typeOfPin;
             snippet="Created on: "+sdf.format(d);
+
         }
         else
         {
@@ -589,7 +587,7 @@ public class MapActivity extends AppCompatActivity
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot: dataSnapshot.getChildren())
                 {
-                    sever_pin_list.add(snapshot);
+                    server_pin_list.add(snapshot);
                     customMarker c = snapshot.getValue(customMarker.class);
                     c.rationalize();
                     switch (c.Type)

@@ -74,4 +74,35 @@
      app:layout_constraintVertical_bias="0.022"
      app:srcCompat="@drawable/ic_trashicon" />
 
+ <TextView
+     android:id="@+id/scoreText"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:text="TextView"
+     app:layout_constraintBottom_toBottomOf="@+id/stars"
+     app:layout_constraintEnd_toEndOf="@+id/username"
+     app:layout_constraintStart_toStartOf="@+id/username"
+     app:layout_constraintTop_toTopOf="@+id/stars"
+     app:layout_constraintVertical_bias="1.0" />
+
+ <TextView
+     android:id="@+id/recycleText"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:text="TextView"
+     app:layout_constraintBottom_toBottomOf="@+id/recyclable_pins"
+     app:layout_constraintEnd_toEndOf="@+id/username"
+     app:layout_constraintStart_toStartOf="@+id/username"
+     app:layout_constraintTop_toTopOf="@+id/recyclable_pins" />
+
+ <TextView
+     android:id="@+id/trashText"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:text="TextView"
+     app:layout_constraintBottom_toBottomOf="@+id/trash_pins"
+     app:layout_constraintEnd_toEndOf="@+id/username"
+     app:layout_constraintStart_toStartOf="@+id/username"
+     app:layout_constraintTop_toTopOf="@+id/trash_pins" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
