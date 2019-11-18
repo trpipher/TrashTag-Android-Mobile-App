@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">TrashTag</string>
     <string name="button">First Name</string>
-    <string name="fabMenuName">New Pin</string>
-    <string name="fab1Name">Trash</string>
-    <string name="fab2Name">Recyclables</string>
+    <string name="fab_trash_Name">New Trash</string>
+    <string name="fab_recycle_Name">Recyclable</string>
+    <string name="fab_new_Name">New Pin</string>
+    <string name="fab_del_Name">Delete</string>
     <string name="title_activity_profile">Profile</string>
     <string name="mapBtnText">View Map</string>
     <string name="Back">home</string>
@@ -36,6 +37,8 @@
     <string name="creators_names">Thomas Pipher Jansen Howell Shankar Sharma Long Li</string>
     <string name="about_text">TrashTag has a one mission: To make the world a cleaner place. We, the creators of TrashTag, aspired to create a useful tool to bring communities, organizations, non-profits, or just a group of friends together to preserve our most precious gift.</string>
     <string name="about_logo">Logos for decor</string>
+    <string name="repo">GitHub Repo: https://github.com/jbentleyh/CSC-414-Project.com </string>
+
 
 
     <string name="menu_home">Home</string>

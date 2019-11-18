@@ -18,7 +18,7 @@
 
 
     <LinearLayout
-        android:id="@+id/fabMainLayout"
+        android:id="@+id/fab_NewOrDel_Layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"
@@ -29,47 +29,51 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
-            android:id="@+id/fabMenuText"
+            android:id="@+id/fab_NewOrDel_Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/fabMenuName" />
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:text="@string/fab_new_Name" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabMain"
+            android:id="@+id/fab_NewOrDel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:backgroundTint="@color/white"
+            app:backgroundTint="@color/white"
             android:clickable="true"
             app:borderWidth="0dp"
-            app:srcCompat="@drawable/baseline_add_circle_black_24" />
+            app:srcCompat="@drawable/ic_new"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/fab1Layout"
+        android:id="@+id/fab_trash_Layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/fabMainLayout"
-        app:layout_constraintEnd_toEndOf="@+id/fabMainLayout"
-        app:layout_constraintStart_toStartOf="@id/fabMainLayout">
+        app:layout_constraintBottom_toBottomOf="@+id/fab_NewOrDel_Layout"
+        app:layout_constraintEnd_toEndOf="@+id/fab_NewOrDel_Layout"
+        app:layout_constraintStart_toStartOf="@id/fab_NewOrDel_Layout">
 
         <TextView
-            android:id="@+id/fab1Text"
+            android:id="@+id/fab_trash_Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/fab1Name" />
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:text="@string/fab_new_Name" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab1"
+            android:id="@+id/fab_trash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/shalloworange"
             android:clickable="true"
             android:scaleType="centerInside"
             app:borderWidth="0dp"
@@ -81,32 +85,36 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/fab2Layout"
+        android:id="@+id/fab_recyclable_Layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/fabMainLayout"
-        app:layout_constraintEnd_toEndOf="@+id/fabMainLayout"
-        app:layout_constraintStart_toStartOf="@id/fabMainLayout">
+        app:layout_constraintBottom_toBottomOf="@+id/fab_NewOrDel_Layout"
+        app:layout_constraintEnd_toEndOf="@+id/fab_NewOrDel_Layout"
+        app:layout_constraintStart_toStartOf="@id/fab_NewOrDel_Layout">
 
         <TextView
-            android:id="@+id/fab2Text"
+            android:id="@+id/fab_recyclable_Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/fab2Name" />
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:text="@string/fab_recycle_Name" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab2"
+            android:id="@+id/fab_recyclable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/shalloworange"
             android:clickable="true"
             app:borderWidth="0dp"
             app:elevation="0dp"
-            app:srcCompat="@drawable/baseline_add_circle_black_24" />
+            app:fabSize="normal"
+            app:maxImageSize="36dp"
+            app:srcCompat="@drawable/ic_recycle" />
 
     </LinearLayout>
 
@@ -119,9 +127,9 @@
         android:src="@drawable/ic_check_green_24dp"
         app:backgroundTint="#000000"
         app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="@+id/fabMainLayout"
-        app:layout_constraintEnd_toStartOf="@+id/fabMainLayout"
-        app:layout_constraintTop_toTopOf="@+id/fabMainLayout" />
+        app:layout_constraintBottom_toBottomOf="@+id/fab_NewOrDel_Layout"
+        app:layout_constraintEnd_toStartOf="@+id/fab_NewOrDel_Layout"
+        app:layout_constraintTop_toTopOf="@+id/fab_NewOrDel_Layout" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabPinCancel"

@@ -3,7 +3,6 @@ package com.trashtag.app;
 import android.Manifest;
 import android.animation.Animator;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -14,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.location.Location;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,16 +43,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.NotNull;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 //--------For Google Map API---------------
 
 public class MapActivity extends AppCompatActivity
-        implements OnMapReadyCallback,OnMapClickListener, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
+        implements OnMapReadyCallback,OnMapClickListener, GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnMyLocationButtonClickListener,
+        GoogleMap.OnMyLocationClickListener {
     //Debug use only
     private String TAG="TrashTag";
     //Handle of the google map
@@ -66,9 +66,8 @@ public class MapActivity extends AppCompatActivity
     // when location permission isn't granted.
     private final LatLng mDefaultLocation = new LatLng(31.329749, -81.334187);
     private static final int DEFAULT_ZOOM = 15;
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    //Flag of whether permission is granted by user
-    private boolean mLocationPermissionGranted;
+
+
 
 
     // The geographical location where the device is currently located.
@@ -82,25 +81,28 @@ public class MapActivity extends AppCompatActivity
     // Keys for storing activity state.
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
-    //Total Tag number on  the map
-    private int TotalNum=0;
+
     private DatabaseReference databaseReference;
+    private ArrayList<DataSnapshot> sever_pin_list=new ArrayList<DataSnapshot>();
 
 
-    private FloatingActionButton fab;
-    private FloatingActionButton fab1;
-    private FloatingActionButton fab2;
+
+
+    private FloatingActionButton fab_NewOrDel;
+    private FloatingActionButton fab_trash;
+	private FloatingActionButton fab_recyclable;
     private FloatingActionButton fabConfirm;
     private FloatingActionButton fabCancel;
-    private LinearLayout fabMLayout;
-    private LinearLayout fab1Layout;
-    private LinearLayout fab2Layout;
-    private TextView fab1Word;
-    private TextView fab2Word;
+    private LinearLayout fab_trash_Layout;
+    private LinearLayout fab_recyclable_Layout;
+    private TextView fab_NewOrDel_Word;
+    private TextView fab_trash_Word;
+    private TextView fab_recyclable_Word;
 
-
-    private boolean fabMenu = false;
-    private boolean creatingPin = false;
+	private boolean showFabMenu = false;
+    private boolean isDelFab = false;
+    private boolean create_Pin = false;
+    private boolean delete_Pin = false;
     private int iconID;
     private Marker lastPin;
     private String typeOfPin;
@@ -130,66 +132,84 @@ public class MapActivity extends AppCompatActivity
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        fab = findViewById(R.id.fabMain);
-        fab1 = findViewById(R.id.fab1);
-        fab2 = findViewById(R.id.fab2);
+        fab_NewOrDel = findViewById(R.id.fab_NewOrDel);
+        fab_NewOrDel_Word = findViewById(R.id.fab_NewOrDel_Text);
+
+        fab_trash = findViewById(R.id.fab_trash);
+        fab_trash_Word = findViewById(R.id.fab_trash_Text);
+        fab_trash_Layout = findViewById(R.id.fab_trash_Layout);
         fabCancel = findViewById(R.id.fabPinCancel);
         fabConfirm = findViewById(R.id.fabPinConfirm);
-        fab1Word = findViewById(R.id.fab1Text);
-        fab2Word = findViewById(R.id.fab2Text);
-        fabMLayout = findViewById(R.id.fabMainLayout);
-        fab1Layout = findViewById(R.id.fab1Layout);
-        fab2Layout = findViewById(R.id.fab2Layout);
+		fab_recyclable = findViewById(R.id.fab_recyclable);
+		fab_recyclable_Word = findViewById(R.id.fab_recyclable_Text);
+		fab_recyclable_Layout = findViewById(R.id.fab_recyclable_Layout);
 
         closeFabConfirms();
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        fab_NewOrDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!fabMenu)
+                if (isDelFab==true)
                 {
-                    fabMenu = true;
-                    showFabMenu();
+					delete_Pin = true;
+                	showFabConfirms();
                 }
-                else{
-                    fabMenu = false;
-                    closeFabMenu();
+                else
+                {
+                    if(!showFabMenu)
+                        showFabMenu();
+                    else
+                        closeFabMenu();
                 }
 
             }
         });
 
-        fab1.setOnClickListener(new View.OnClickListener() {
+        fab_trash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                creatingPin = true;
+                create_Pin = true;
                 typeOfPin = "Trash";
                 iconID = R.drawable.ic_trashicon;
-                dropPinOnMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
+                dropPinOnMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude(),true,null,null);
+                showFabConfirms();
+
+            }
+        });
+
+        fab_recyclable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                create_Pin = true;
+                typeOfPin = "Recycling";
+                iconID = R.drawable.ic_recycle;
+                dropPinOnMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude(),true,null,null);
                 showFabConfirms();
             }
         });
 
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                creatingPin = true;
-                typeOfPin = "Recycling";
-                iconID = R.drawable.ic_recycle;
-                dropPinOnMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
-                showFabConfirms();
-            }
-        });
 
         fabCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                creatingPin = false;
-                if(lastPin != null) {
-                    lastPin.remove();
-                    lastPin = null;
+                if(create_Pin ==true)
+                {
+                    create_Pin = false;
+                    if(lastPin != null) {
+                        lastPin.remove();
+                        lastPin = null;
 
+                    }
                 }
+                else if(delete_Pin == true)
+                {
+                    delete_Pin = false;
+                    switchMainButton(false);
+                    if(lastPin != null) {
+                        lastPin = null;
+                    }
+                }
+
                 closeFabConfirms();
             }
         });
@@ -198,9 +218,15 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 if(lastPin!= null) {
-                    creatingPin = false;
-                    String type = "";
-                    switch (iconID){
+                    LatLng l = new LatLng(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
+                    String state = getLocation(l);
+                    DatabaseReference loadRef = FirebaseDatabase.getInstance().getReference("Pins/"+state);
+                    if (create_Pin)
+                    {
+                        DataSnapshot snapshot;
+                        create_Pin = false;
+						String type = "";
+						switch (iconID){
                         case R.drawable.ic_recycle:
                             type = "Recycle";
                             break;
@@ -208,9 +234,21 @@ public class MapActivity extends AppCompatActivity
                             type = "Trash";
                             break;
 
+                    	}
+                        customMarker c = new customMarker(lastPin.getTitle(),
+                                lastPin.getSnippet(), type,lastPin.getPosition());
+                        databaseReference.child("Pins").child(getLocation(lastPin.getPosition()))
+                                .push().setValue(c);
+
                     }
-                    customMarker c = new customMarker(lastPin.getTitle(),lastPin.getSnippet(), type,lastPin.getPosition());
-                    databaseReference.child("Pins").child(getLocation(lastPin.getPosition())).push().setValue(c);
+                    else if(delete_Pin)
+                    {
+                        delete_Pin=false;
+                        delete_pin(lastPin);
+                        switchMainButton(false);
+                        lastPin.remove();
+
+                    }
                     lastPin = null;
                     closeFabConfirms();
                 }
@@ -246,6 +284,35 @@ public class MapActivity extends AppCompatActivity
 
 
     }
+    //Delete a pin from server & local
+    private void delete_pin(Marker marker)
+    {
+        if(sever_pin_list.isEmpty())
+            return;
+       int size=sever_pin_list.size();
+       DataSnapshot snapshot;
+       String key="";
+       for(int i=0;i<size;i++)
+       {
+           snapshot=sever_pin_list.get(i);
+           customMarker c = snapshot.getValue(customMarker.class);
+           c.rationalize();
+           if( (c.latude==marker.getPosition().latitude)&&(c.lotude==marker.getPosition().longitude))
+           {
+               // Remove from sever
+               key=snapshot.getKey();
+               databaseReference.child("Pins").child(getLocation(lastPin.getPosition()))
+                       .child(key).removeValue();
+               // remove from local list
+               sever_pin_list.remove(i);
+               // Finish delete
+               return;
+           }
+
+
+
+       }
+    }
     private void showFabConfirms(){
         fabConfirm.show();
         fabCancel.show();
@@ -255,48 +322,77 @@ public class MapActivity extends AppCompatActivity
         fabConfirm.hide();
         fabCancel.hide();
     }
+    private void switchMainButton(boolean isSwitch2Del)
+    {
+        if (isSwitch2Del== true)
+        {
+            isDelFab=true;
+            closeFabMenu();
+            fab_NewOrDel_Word.setText(R.string.fab_del_Name);
+            fab_NewOrDel.setBackgroundTintList(getResources().getColorStateList(R.color.red));
+            fab_NewOrDel.setImageResource(R.drawable.ic_delete);
 
+        }
+        else
+        {
+            isDelFab=false;
+            fab_NewOrDel_Word.setText(R.string.fab_new_Name);
+            fab_NewOrDel.setBackgroundTintList(getResources().getColorStateList(R.color.white));
+            fab_NewOrDel.setImageResource(R.drawable.ic_new);
+        }
+    }
     private void showFabMenu(){
-        Log.i("RAN","showFabMenu");
-        fab1Layout.setVisibility(View.VISIBLE);
-        fab2Layout.setVisibility(View.VISIBLE);
-        fab1Layout.animate().translationY(-getResources().getDimension(R.dimen.fab1_translate));
-        fab2Layout.animate().translationY(-getResources().getDimension(R.dimen.fab2_translate));
+        if(showFabMenu==false)
+        {
+            showFabMenu=true;
+            Log.i("RAN","showFabMenu");
+            fab_trash_Layout.setVisibility(View.VISIBLE);
+            fab_recyclable_Layout.setVisibility(View.VISIBLE);
+            fab_trash_Layout.animate().translationY(-getResources().getDimension(R.dimen.fab1_translate));
+            fab_recyclable_Layout.animate().translationY(-getResources().getDimension(R.dimen.fab2_translate));
+        }
+
     }
 
     private void closeFabMenu(){
-        Log.i("RAN","closeFabMenu");
-        fab1Word.setVisibility(View.INVISIBLE);
-        fab2Word.setVisibility(View.INVISIBLE);
-        fab1Layout.animate().translationY(0);
-        fab2Layout.animate().translationY(0).setListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
+        if(showFabMenu==true)
+        {
+            showFabMenu=false;
+            Log.i("RAN","closeFabMenu");
+            fab_trash_Word.setVisibility(View.INVISIBLE);
+            fab_recyclable_Word.setVisibility(View.INVISIBLE);
+            fab_trash_Layout.animate().translationY(0);
+            fab_recyclable_Layout.animate().translationY(0).setListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animation) {
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if(!fabMenu)
-                {
-                    fab1Layout.setVisibility(View.GONE);
-                    fab2Layout.setVisibility(View.GONE);
-                    fab1Word.setVisibility(View.VISIBLE);
-                    fab2Word.setVisibility(View.VISIBLE);
                 }
 
-            }
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    if(!showFabMenu)
+                    {
+                        fab_trash_Layout.setVisibility(View.GONE);
+                        fab_recyclable_Layout.setVisibility(View.GONE);
+                        fab_trash_Word.setVisibility(View.VISIBLE);
+                        fab_recyclable_Word.setVisibility(View.VISIBLE);
+                    }
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
+                }
 
-            }
+                @Override
+                public void onAnimationCancel(Animator animation) {
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {
+                }
 
-            }
-        });
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+        }
+
     }
 
     /**
@@ -360,19 +456,41 @@ public class MapActivity extends AppCompatActivity
      *  variable:
      *      Latitude: double type. Latitude of the location.
      *      Longitude: double type. Longitude of the location.
+     *      NewPin   : boolean type, whether this is new pin or load pin from database
+     *      Title    : String type, only when NewPin==False needed.
+     *      Snippet  : String type, only when NewPin==False needed.
      *
      **/
-    private void dropPinOnMap(double Latitude,double Longitude) {
+    private void dropPinOnMap(double Latitude,double Longitude,boolean NewPin,String Title,String Snippet) {
         //Draw a tag on the map
-        Date d = new Date(System.currentTimeMillis());
-        SimpleDateFormat sdf = new SimpleDateFormat(("MM-dd-YY HH:mm"));
-        LatLng latLng = new LatLng(Latitude, Longitude);
-        String Title = typeOfPin;
+        String snippet;
+        LatLng latLng;
+        String title;
+
+        if ( NewPin == true)
+        {
+            //This is a new pin
+            Date d = new Date(System.currentTimeMillis());
+            SimpleDateFormat sdf = new SimpleDateFormat(("MM-dd-YY HH:mm"));
+            latLng = new LatLng(Latitude, Longitude);
+            title = typeOfPin;
+            snippet="Created on: "+sdf.format(d);
+        }
+        else
+        {
+            //This is old pin,load from database
+            latLng = new LatLng(Latitude, Longitude);
+            title = Title;
+            snippet=Snippet;
+        }
+        //Set Custom InfoWindow Adapter
+        CustomInfoWindowAdapter adapter = new CustomInfoWindowAdapter(MapActivity.this);
+        mMap.setInfoWindowAdapter(adapter);
         lastPin = mMap.addMarker(new MarkerOptions()
                 .position(latLng)
                 .icon(BitmapDescriptorFactory.fromBitmap(AppResources.getBitmapfromVector(this,iconID)))
-                .title(Title)
-                .snippet("Created on: "+sdf.format(d)));
+                .title(title)
+                .snippet(snippet));
 
 
     }
@@ -396,11 +514,10 @@ public class MapActivity extends AppCompatActivity
         mMap.setOnMyLocationClickListener(this);
         //Set the main activity as the click listener
         mMap.setOnMapClickListener(this);
-
+        mMap.setOnMarkerClickListener(this);
 
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
-
 
     }
     /**
@@ -413,15 +530,33 @@ public class MapActivity extends AppCompatActivity
     @Override
     public void onMapClick(LatLng point) {
         //Just drop a tag where the user clicked
-        if(creatingPin) {
+        if(create_Pin) {
             if(lastPin != null)
                 lastPin.remove();
-            dropPinOnMap(point.latitude, point.longitude);
+            else
+            {
+                lastPin = null;
+                switchMainButton(false);
+            }
+            dropPinOnMap(point.latitude, point.longitude,true,null,null);
         }
-
-
+        else
+        {
+            lastPin = null;
+            switchMainButton(false);
+        }
     }
 
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        // If add a new pin, then don't show info window
+        if (create_Pin == true)
+            return true;
+        marker.showInfoWindow();
+        switchMainButton(true);
+		lastPin=marker;
+        return false;
+    }
     @Override
     public void onMyLocationClick(@NonNull Location location) {
 
@@ -434,6 +569,7 @@ public class MapActivity extends AppCompatActivity
         // (the camera animates to the user's current position).
         return false;
     }
+
     /**
      *  usage:
      *      Ask user for permission state in AndroidManifest.xml.
@@ -453,6 +589,7 @@ public class MapActivity extends AppCompatActivity
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot: dataSnapshot.getChildren())
                 {
+                    sever_pin_list.add(snapshot);
                     customMarker c = snapshot.getValue(customMarker.class);
                     c.rationalize();
                     switch (c.Type)
@@ -464,11 +601,7 @@ public class MapActivity extends AppCompatActivity
                             iconID = R.drawable.ic_trashicon;
                             break;
                     }
-                    mMap.addMarker(new MarkerOptions().
-                            position(c.retLoc())
-                            .icon(BitmapDescriptorFactory.fromBitmap(AppResources.getBitmapfromVector(getBaseContext(),iconID)))
-                            .title(c.Title)
-                            .snippet(c.Snippet));
+                    dropPinOnMap(c.retLoc().latitude,c.retLoc().longitude,false,c.Title,c.Snippet);
                 }
             }
 
@@ -516,7 +649,6 @@ class customMarker implements Serializable {
         Title = s;
         Snippet = x;
         Type = t;
-
     }
 
     void rationalize(){
