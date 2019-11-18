@@ -4,96 +4,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#CEF1CF"
+    android:background="#FFF3D4"
     tools:context=".Profile">
 
-    <Button
-        android:id="@+id/home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:background="#8EE22C"
-        android:text="@string/back"
-        app:layout_constraintEnd_toStartOf="@+id/sign_out"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+ <ImageView
+     android:id="@+id/default_avatar"
+     android:layout_width="291dp"
+     android:layout_height="202dp"
+     android:layout_marginStart="48dp"
+     android:layout_marginTop="16dp"
+     android:layout_marginEnd="48dp"
+     android:contentDescription="@string/profile_pic"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintHorizontal_bias="0.666"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toTopOf="parent"
+     app:srcCompat="@mipmap/ic_launcher_round" />
 
-    <TextView
-        android:id="@+id/username"
-        android:layout_width="131dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="16dp"
-        android:background="#00000000"
-        android:clickable="false"
-        android:fontFamily="sans-serif"
-        android:text="@string/username"
-        android:textSize="26sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/default_avatar" />
+ <ImageView
+     android:id="@+id/recyclable_pins"
+     android:layout_width="40dp"
+     android:layout_height="47dp"
+     android:layout_marginStart="12dp"
+     android:layout_marginTop="12dp"
+     android:background="#00000000"
+     android:contentDescription="@string/recyclable_pins"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/stars"
+     app:srcCompat="@drawable/ic_recycle" />
 
-    <Button
-        android:id="@+id/sign_out"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="#8EE22C"
-        android:text="@string/sign_out"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+ <ImageView
+     android:id="@+id/stars"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_marginStart="16dp"
+     android:background="#00000000"
+     android:contentDescription="@string/stars"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/username"
+     app:srcCompat="@android:drawable/btn_star_big_on" />
 
-    <ImageView
-        android:id="@+id/default_avatar"
-        android:layout_width="363dp"
-        android:layout_height="276dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="84dp"
-        android:layout_marginEnd="48dp"
-        android:contentDescription="@string/profile_pic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.571"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+ <TextView
+     android:id="@+id/username"
+     android:layout_width="131dp"
+     android:layout_height="43dp"
+     android:layout_marginStart="120dp"
+     android:layout_marginTop="20dp"
+     android:background="#00000000"
+     android:clickable="false"
+     android:fontFamily="sans-serif"
+     android:text="@string/username"
+     android:textSize="26sp"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintHorizontal_bias="0.0"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/default_avatar" />
 
-    <ImageView
-        android:id="@+id/stars"
-        android:layout_width="61dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="52dp"
-        android:background="#00000000"
-        android:contentDescription="@string/stars"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username"
-        app:srcCompat="@android:drawable/btn_star_big_on" />
-
-    <ImageView
-        android:id="@+id/trash_pins"
-        android:layout_width="61dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="16dp"
-        android:background="#00000000"
-        android:contentDescription="@string/trash_pins"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclable_pins"
-        app:srcCompat="@drawable/ic_trashicon" />
-
-    <ImageView
-        android:id="@+id/recyclable_pins"
-        android:layout_width="61dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="16dp"
-        android:background="#00000000"
-        android:contentDescription="@string/recyclable_pins"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stars"
-        app:srcCompat="@drawable/ic_recycle" />
+ <ImageView
+     android:id="@+id/trash_pins"
+     android:layout_width="46dp"
+     android:layout_height="39dp"
+     android:layout_marginStart="8dp"
+     android:layout_marginTop="8dp"
+     android:background="#00000000"
+     android:contentDescription="@string/trash_pins"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/recyclable_pins"
+     app:srcCompat="@drawable/ic_trashicon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

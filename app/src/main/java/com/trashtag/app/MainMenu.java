@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -40,15 +41,17 @@ public class MainMenu extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
     Button btnMap;
     DatabaseReference databaseReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
         firebaseInitiation();
         Login();
-
-
         getPermissions();
+
+        // Map Page
         btnMap = findViewById(R.id.btnMap);
         btnMap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +62,7 @@ public class MainMenu extends AppCompatActivity {
                 }
             });
 
+        // Profile Page
         btnMap = findViewById(R.id.profile_id);
         btnMap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +71,8 @@ public class MainMenu extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Settings Page
         btnMap = findViewById(R.id.settings_id);
         btnMap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,11 +81,13 @@ public class MainMenu extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // About Page
         btnMap = findViewById(R.id.about_id);
         btnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), NavDrawer.class);
+                Intent intent = new Intent(getApplicationContext(), About.class);
                 startActivity(intent);
             }
         });

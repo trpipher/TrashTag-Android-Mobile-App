@@ -14,10 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity
-            android:name=".NavDrawer"
-            android:label="@string/title_activity_nav_drawer"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+          <activity android:name=".About" />
+
         <activity android:name=".Settings" />
         <activity android:name=".Profile" />
         <activity android:name=".MainMenu">
@@ -33,7 +31,10 @@
             android:value="AIzaSyB0IKlkMp6DBkAGfM8HqAgg4uZdncOA24U" /> <!-- Only for Google play service version higher than 16.0 -->
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" /> <!-- Google Map API -->
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" /> <!-- Google Map API -->
         <uses-library android:name="com.google.android.maps" />
         <uses-library
             android:name="org.apache.http.legacy"

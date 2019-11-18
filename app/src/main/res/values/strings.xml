@@ -15,7 +15,6 @@
     <string name="name">Name</string>
     <string name="back">Back</string>
     <string name="my_profile">My Profile</string>
-    <string name="settings">Settings</string>
     <string name="about">About</string>
     <string name="logo">trashtag_logo</string>
     <string name="title_activity_nav_drawer">NavDrawer</string>
@@ -30,7 +29,13 @@
     <string name="trash_pins">How many trash pins a user has picked up.</string>
     <string name="recyclable_pins">How many recyclable pins a user has picked up.</string>
 
+    <string name="trashtag">#TrashTag</string>
 
+    <string name="about_trashtag">About #TrashTag</string>
+    <string name="creators">Creators:</string>
+    <string name="creators_names">Thomas Pipher Jansen Howell Shankar Sharma Long Li</string>
+    <string name="about_text">TrashTag has a one mission: To make the world a cleaner place. We, the creators of TrashTag, aspired to create a useful tool to bring communities, organizations, non-profits, or just a group of friends together to preserve our most precious gift.</string>
+    <string name="about_logo">Logos for decor</string>
 
 
     <string name="menu_home">Home</string>
@@ -40,6 +45,11 @@
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
     <string name="search">Search</string>
+    <string name="settings">Settings</string>
+    <string name="title_activity_bottom_nav">bottom_nav</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 
 
 </resources>

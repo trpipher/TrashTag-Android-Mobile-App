@@ -19,14 +19,16 @@ Official Repo for the CSC 414 group project.
 # How to push your code to the respository
 3. Once you're ready to update the repository, use the following commands:
 
--> initialize git: `git init`
+-> initialize git:      `git init`
 
--> add files: `git add .`
+-> get latest repo version:       `git pull origin master`
 
--> commit the files: `git commit -m "put a message about the update here"`
+-> add files:       `git add .`
 
--> connect to the repo: `git remote add origin https://github.com/jbentleyh/CSC-414-Project.git`
+-> commit the files:      `git commit -m "put a message about the update here"`
 
--> push the files to the repository: `git push origin master`
+-> connect to the repo:       `git remote add origin https://github.com/jbentleyh/CSC-414-Project.git`
+
+-> push the files to the repository:      `git push origin master`
 
 4. Or, upload the files directly to the repo (be careful tho)

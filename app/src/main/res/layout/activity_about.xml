@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF3D4"
+    tools:context=".About">
+
+    <TextView
+        android:id="@+id/about_text"
+        android:layout_width="313dp"
+        android:layout_height="192dp"
+        android:fontFamily="@font/acme"
+        android:text="@string/about_text"
+        android:textColor="#000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/about_trashtag" />
+
+    <ImageView
+        android:id="@+id/about_logo2"
+        android:layout_width="69dp"
+        android:layout_height="56dp"
+        android:layout_marginEnd="60dp"
+        android:contentDescription="@string/about_logo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.989"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/about_text"
+        app:layout_constraintVertical_bias="0.057"
+        app:srcCompat="@drawable/ic_recycle" />
+
+    <TextView
+        android:id="@+id/about_trashtag"
+        android:layout_width="337dp"
+        android:layout_height="88dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/pacifico"
+        android:text="@string/about_trashtag"
+        android:textColor="#2E831F"
+        android:textSize="43sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.459"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/creators_names"
+        android:layout_width="128dp"
+        android:layout_height="100dp"
+        android:fontFamily="@font/acme"
+        android:text="@string/creators_names"
+        android:textColor="#3D472A"
+        android:textSize="19sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.558"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/creators"
+        app:layout_constraintVertical_bias="0.058" />
+
+    <ImageView
+        android:id="@+id/about_logo1"
+        android:layout_width="87dp"
+        android:layout_height="88dp"
+        android:layout_marginStart="48dp"
+        android:contentDescription="@string/about_logo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/about_logo2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/about_text"
+        app:layout_constraintVertical_bias="0.005"
+        app:srcCompat="@mipmap/trashtag_logo_foreground" />
+
+    <TextView
+        android:id="@+id/creators"
+        android:layout_width="89dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/pacifico"
+        android:text="@string/creators"
+        android:textColor="#696565"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/about_text" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

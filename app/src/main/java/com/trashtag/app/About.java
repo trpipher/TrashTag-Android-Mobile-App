@@ -7,17 +7,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.android.gms.maps.SupportMapFragment;
+public class About extends AppCompatActivity {
 
-public class Profile extends AppCompatActivity {
-
-
+    Button btn_Back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_about);
 
 
-        }
     }
+}
