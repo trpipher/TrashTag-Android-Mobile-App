@@ -109,6 +109,7 @@ public class MapActivity extends AppCompatActivity
     private String typeOfPin;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -31,5 +31,7 @@ public class Profile extends AppCompatActivity {
         trashText.setText(User.user.getTrashPins()+" " + getString(R.string.trashPlaced));
 
 
+
+
         }
     }
