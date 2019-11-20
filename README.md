@@ -3,13 +3,10 @@ Official Repo for the CSC 414 group project.
 # TODO
 
 # User Creation
-- User Class Creation
-- User Pin Pickup
-- Add Type of pin picked up for user
+- Add score when use picks up a pin
 
 # Profile Page
 - Add user informartion
-  - Username
   - Score
  
  
