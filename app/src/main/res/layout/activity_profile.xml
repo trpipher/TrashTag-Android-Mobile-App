@@ -7,6 +7,16 @@
     android:background="#B8E2B6"
     tools:context=".Profile">
 
+ <Button
+     android:id="@+id/signOut2"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_marginBottom="64dp"
+     android:text="@string/sign_out"
+     app:layout_constraintBottom_toBottomOf="parent"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent" />
+
  <ImageView
      android:id="@+id/default_avatar"
      android:layout_width="320dp"
