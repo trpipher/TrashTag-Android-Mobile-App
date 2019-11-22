@@ -48,7 +48,12 @@ public class User  implements Serializable {
                 break;
             case "Recycling":
                 recyclePins++;
+                break;
+            case "Pickup":
+                score++;
+                break;
         }
+
         AppResources.databaseReference().child("Users/"+AppResources.mAuth().getCurrentUser().getUid()).setValue(new FireUser(User.user));
     }
 }

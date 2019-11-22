@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#B8E2B6"
+    tools:context=".Leaderboard">
+
+    <TextView
+        android:id="@+id/leaderboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Leaderboard"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/leaderboard">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/scoreLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="@id/rankLayout"
+                    app:layout_constraintStart_toEndOf="@id/rankLayout"
+                    app:layout_constraintTop_toTopOf="@id/rankLayout">
+
+                    <TextView
+                        android:id="@+id/ScoreText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Score" />
+
+                    <TextView
+                        android:id="@+id/Score1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="score1" />
+
+                    <TextView
+                        android:id="@+id/Score2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="score2" />
+
+                    <TextView
+                        android:id="@+id/Score3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="score3" />
+
+                    <TextView
+                        android:id="@+id/Score4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="score4" />
+
+                    <TextView
+                        android:id="@+id/Score5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="score5" />
+
+                    <TextView
+                        android:id="@+id/Score6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="score6" />
+
+                    <TextView
+                        android:id="@+id/Score7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="score7" />
+
+                    <TextView
+                        android:id="@+id/Score8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="score8" />
+
+                    <TextView
+                        android:id="@+id/Score9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="score9" />
+
+                    <TextView
+                        android:id="@+id/Score10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="score10" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/userLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="@id/rankLayout"
+                    app:layout_constraintStart_toEndOf="@+id/scoreLayout"
+                    app:layout_constraintTop_toTopOf="@id/rankLayout">
+
+                    <TextView
+                        android:id="@+id/UserText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Username" />
+
+                    <TextView
+                        android:id="@+id/User1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+
+                    <TextView
+                        android:id="@+id/User2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+
+                    <TextView
+                        android:id="@+id/User3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+
+                    <TextView
+                        android:id="@+id/User4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+
+                    <TextView
+                        android:id="@+id/User5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+
+                    <TextView
+                        android:id="@+id/User6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+
+                    <TextView
+                        android:id="@+id/User7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+
+                    <TextView
+                        android:id="@+id/User8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+
+                    <TextView
+                        android:id="@+id/User9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+
+                    <TextView
+                        android:id="@+id/User10"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/rankLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/RankText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rank" />
+
+                    <TextView
+                        android:id="@+id/rank1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1" />
+
+                    <TextView
+                        android:id="@+id/rank2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2" />
+
+                    <TextView
+                        android:id="@+id/rank3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3" />
+
+                    <TextView
+                        android:id="@+id/rank4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="4" />
+
+                    <TextView
+                        android:id="@+id/rank5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5" />
+
+                    <TextView
+                        android:id="@+id/rank6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="6" />
+
+                    <TextView
+                        android:id="@+id/rank7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="7" />
+
+                    <TextView
+                        android:id="@+id/rank8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="8" />
+
+                    <TextView
+                        android:id="@+id/rank9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="9" />
+
+                    <TextView
+                        android:id="@+id/rank10"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="10" />
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

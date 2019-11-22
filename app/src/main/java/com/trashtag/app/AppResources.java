@@ -29,5 +29,6 @@ public class AppResources {
 
     public static FirebaseAuth mAuth(){return FirebaseAuth.getInstance();}
     public static DatabaseReference databaseReference(){return FirebaseDatabase.getInstance().getReference();}
+    public static DatabaseReference databaseReference(String path){return FirebaseDatabase.getInstance().getReference(path);}
 
 }

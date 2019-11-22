@@ -76,11 +76,12 @@
 
     <TextView
         android:id="@+id/editText"
-        android:layout_width="299dp"
-        android:layout_height="119dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:autofillHints=""
         android:ems="10"
         android:fontFamily="@font/pacifico"
+        android:gravity="center"
         android:hint="@string/trashtag"
         android:inputType="textPersonName"
         android:text="@string/trashtag"

@@ -248,6 +248,7 @@ public class MapActivity extends AppCompatActivity
                     {
                         delete_Pin=false;
                         delete_pin(lastPin);
+                        User.user.updatePinScore("Pickup");
                         switchMainButton(false);
                         lastPin.remove();
 
@@ -281,13 +282,19 @@ public class MapActivity extends AppCompatActivity
         fabb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MapActivity.this, Profile.class));
+                startActivity(new Intent(MapActivity.this, Leaderboard.class));
             }
         });
 
 
 
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getDeviceLocation();
     }
 
     //Delete a pin from server & local
@@ -310,6 +317,7 @@ public class MapActivity extends AppCompatActivity
                return;
            }
        }
+
     }
     private void showFabConfirms(){
         fabConfirm.show();
