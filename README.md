@@ -20,6 +20,18 @@ Today, trash is everywhere. It's in our oceans, streets, and communities. With p
 * Global leaderboard
 
 # User Case Model
-
+![user_case_model](https://user-images.githubusercontent.com/45768739/74757833-275ad100-523c-11ea-9320-1bbc25f5effb.png)
 
  
+# In-App Screenshots
+### Splash Login
+![sign_in_splash](https://user-images.githubusercontent.com/45768739/74756648-81f32d80-523a-11ea-9526-1712dcf58898.PNG)
+
+### Main Menu
+![main_menu](https://user-images.githubusercontent.com/45768739/74758079-743ea780-523c-11ea-8270-ef767cb55bde.png)
+
+### Profile Page
+![profile](https://user-images.githubusercontent.com/45768739/74757524-b87d7800-523b-11ea-9c52-7847e3159a6f.png)
+
+### Live Map
+![live_map](https://user-images.githubusercontent.com/45768739/74758546-1b234380-523d-11ea-8044-c91ec8790826.png)
