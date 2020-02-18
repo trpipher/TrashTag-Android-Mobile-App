@@ -6,6 +6,7 @@ TrashTag also includes a global leaderboard displaying the top 10 users with the
 # Table of Contents
 * Purpose
 * Features
+* User Case Model
 * In-App Screenshots
 
 # Purpose
