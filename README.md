@@ -4,8 +4,10 @@ A user can also travel to a trash pickup pin on the map and pick up the trash th
 TrashTag also includes a global leaderboard displaying the top 10 users with the highest amount of points!
 
 # Table of Contents
-* Purpose
+* [Purpose]
 
+# Purpose
+test
 
 # User Creation
 - Add score when use picks up a pin
