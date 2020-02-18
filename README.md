@@ -4,22 +4,18 @@ A user can also travel to a trash pickup pin on the map and pick up the trash th
 TrashTag also includes a global leaderboard displaying the top 10 users with the highest amount of points!
 
 # Table of Contents
-* [Purpose]
+* Purpose
+* Features
+* In-App Screenshots
 
 # Purpose
-test
+Today, trash is everywhere. It's in our oceans, streets, and communities. With plastic being the one of the largest culprits of dangerous wastes, we wanted to build an application to help prevent littering while also incentivizing others to pick up litter.
 
-# User Creation
-- Add score when use picks up a pin
+# Features
+* Live map with buttons to place pins on your location
+* Ways to pick up pins if you are close enough to one on the live map
+* Score system to reward pin pick-ups and pin placements
+* User profile (Username, # of pins picked up, # of pins places, personal score)
+* Global leaderboard
 
-# Profile Page
-- Add user informartion
-  - Score
- 
- 
- # Optionals
-- Leaderboards
-- Pre-Login Splash 
-- Pin filtering
- 
  
