@@ -19,4 +19,7 @@ Today, trash is everywhere. It's in our oceans, streets, and communities. With p
 * User profile (Username, # of pins picked up, # of pins places, personal score)
 * Global leaderboard
 
+# User Case Model
+
+
  
